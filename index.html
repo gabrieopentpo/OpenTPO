@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<!-- 
+This is opentpo-0.1.0.0 at alpha stage.
+All lefts reserved.
+-->
+<html>
+<head>
+  <title>opentpo-0.1_alpha</title>
+  <script type="text/javascript" src="html/include.js"></script>
+  <link rel="stylesheet" type="text/css" href="html/init.css" />
+</head>
+<body>
+  <div id="header">
+    <p id="pageTag">opentpo-0.1_alpha</p>
+    <a class="circleButtonsRight" id="nextButton"></a>
+    <a class="circleButtonsRight" id="backButton"></a>
+    <a class="circleButtonsRightGrey" id="nextButtonGrey"></a>
+    <a class="circleButtonsRightGrey" id="backButtonGrey"></a>
+    <a class="circleButtonsRight" id="helpButton"></a>
+    <a class="circleButtonsRight" id="reviewButton"></a>
+    <a class="circleButtonsRightGrey" id="reviewButtonGrey"></a>
+<!-- VOLUME button at the right side of CONTINUE button, but at the left side of OK button. -->
+    <a class="circleButtonsRight" id="volumeButton"></a>
+    <a class="circleButtonsRight" id="continueCircleButton"></a>
+    <a class="squareButtonsRight" id="continueButton"></a>
+    <a class="squareButtonsRight" id="reviewSquareButton"></a>
+    <a class="squareButtonsRight" id="gotoQuestionButton"></a>
+    <a class="squareButtonsRight" id="returnButton"></a>
+    <a class="specialSquareButtonsRight" id="viewTextButton"></a>
+    <a class="specialSquareButtonsRight" id="viewQuestionButton"></a>
+    <a class="buttonsLeft" id="testExitButton"></a>
+    <a class="buttonsLeft" id="sectionExitButton"></a>
+    <a class="buttonsLeft" id="pauseTestButton"></a>
+    <a class="buttonsLeft" id="resumeTestButton"></a>
+    <a class="buttonsLeft" id="showSolutionButton"></a>
+    <a class="buttonsLeft" id="hideSolutionButton"></a>
+    <p id="questionNumber"></p>
+    <a id="showTimeButton"></a>
+    <a id="hideTimeButton"></a>
+    <p id="timer"><span id="hours"></span> : <span id="minutes"></span> : <span id="seconds"></span></p>
+  </div>
+  <div class="wrapper">
+<!--
+Each div refers to one certain page or frame. Use CSS or Javascript to show or hide them.
+-->
+<!--opentpo Pages-->
+    <div id="welcomePage">
+      <div>
+	<a href="javascript:" class="whiteButtons" id="testModeButton">Test mode</a>
+	<a href="javascript:" class="whiteButtons" id="practiceModeButton">Practice mode</a>
+	<a href="javascript:" class="whiteButtons" id="reviewModeButton">Review mode</a>
+      </div>
+      <p><a href="javascript:" id="settingsLink">Settings</a></p>
+      <p><a href="javascript:" id="helpLink">Help</a></p>
+      <p><a href="javascript:" id="aboutLink">About openTPO</a></p>
+      <p><a href="javascript:" id="acknowledgeLink">Acknowledgements</a></p>
+      <p><a href="javascript:" id="contributeLink">Contribute to this project!</a></p>
+    </div>
+    <div id="settingsPage">
+      <p><a href="javascript:" onclick="resetLocalStorage();">Clear all answers</a></p>
+    </div>
+    <div id="helpPage">
+      <h1>openTPO Help</h1>
+      <p>Width of the test frame is locked at 1024 pixels. A minimum screen resolution of 1024x768 would ensure openTPO works correctly. Besides, we strongly recommend activating fullscreen mode by pressing <strong>F11</strong> on your keyboard. Running openTPO in fullscreen mode would help to simulate the appearance of actual test. </p>
+      <h2>Modes</h2>
+      <p>There are three modes: test mode, practice mode, and review mode.</p>
+      <p>Test mode would simulate the actual process of the test, including all four parts in order: reading section, listening section, speaking section, and writing section. There would be a compulsory ten-minute break after listening section, like the actual test. Answers and responses will be saved automatically.</p>
+      <p>Practice mode splits an entire set of test into several parts. Apart from four sections mentioned above in the test mode, an individual reading passage or a specific task of speaking or writing could be selected as well. When the selected part finishes, a pop-up guide would guide returning to the "set select" page. New answers of the selected part will be saved.</p>
+      <p>Review mode compares your answer and correct answer of reading section and listening section in a chart, from which you can reach every question and see solutions. For the speaking and writing section, since there are no correct answer, the chart would contain only your responses.</p>
+      <p>In this version of openTPO, only reading section is available.</p>
+      <h2>Answers</h2>
+      <p>This app could save answers automatically when a choice is selected. Since the webpage is unable to access a local file directly, openTPO puts practice history and responses in a sandbox managed by your browser. You SHOULD export these auto-save data to a file before cleaning browser history or uninstalling your browser. The reverse operation is to import auto-save data.</p>
+      <p>In this version of openTPO, importing and exporting are not supported. Clicking on Review mode button will show your answer and correct answer.</p>
+      <h2>Browser compatibility</h2>
+      <p>Since openTPO harnesses a set of HTML5 traits, you should ensure that your browser supports them. The newest browsers barely cause any problems. If you have any problems running openTPO, updating browser should always be the first choice.</p>
+      <p>The highest version of IE on Windows XP do NOT support any HTML5 traits. Windows XP users should download other browsers.</p>
+      <p>Be sure to enable Javascript support in browser settings. Nearly all functions of openTPO are powered by Javascript.</p>
+    </div>
+    <div id="aboutPage">
+      <p>openTPO-0.1.0.0_alpha</p>
+    </div>
+    <div id="acknowledgementPage">
+      
+    </div>
+    <div id="contributePage">
+      <h1>Contribute to this project!</h1>
+      <p>Born to be open-source, openTPO welcomes every contributor. At present it is in an alpha stage which includes only a little fraction of what it should have. With your help, we believe openTPO will grow much faster.</p>
+      <h2>Report bugs</h2>
+      <p>Although constantly tested during its development, openTPO cannot guarantee it is bug-free. We would appreciate everyone who finds a bug, no matter how little it is.</p>
+      <p>Emailing the development team is the easiest way to report a bug. The email address is at the bottom of this page.</p>
+      <h2>Help with contents</h2>
+      <p>Fitting a reading passage into the format that openTPO could recognize is proved time-consuming and tedious. There are at present 26 reading sets, each including 3 passages. We wish you be the volunteer - helping with any individual passage would be much appreciated.</p>
+      <p>The development team has invited a markup language specifically for the reading passage. To help process a passage becomes fairly easy. It would not take much time and effort to deal with an individual passage, as long as you have the text of passage and questions. For more details, please view our instructions in the <strong>markup</strong> folder.</p>
+      <p>Before starting with a passage, please be sure to email us to let us know which passage you will deal with. If another volunteer has finished the one that you choose, we could inform you.</p>
+      <h2>Make a patch</h2>
+      <p>Since the source codes are entirely open to public, certainly we would appreciate a lot if you submit a patch to this version of openTPO!</p>
+      <p>Both emailing us with the patch and forking and merging with our project on github.com are great ways to help directly with the codes. We are looking forward to every patch!</p>
+      <h1>Contact the team</h1>
+      <p>Our email address: <a href="mailto: opentpo@outlook.com">opentpo@outlook.com</a></p>
+      <p>Our project on github: <a href="http://opentpo.github.com/opentpo">http://opentpo.github.com/opentpo</a></p>
+    </div>
+<!--Mode selection-->
+    <div id="setSelectPage">
+      <div id="setSelectButtons">
+      </div>
+    </div>
+<!--review mode-->
+    <div id="reviewChart">
+      <div id="reviewChartReading">
+	<table>
+	  <tr>
+	    <th>#</th>
+	    <th>My answer</th>
+	    <th>Correct answer</th>
+	  </tr>
+	</table>
+      </div>
+    </div>
+<!--begin test-->
+    <div id="testIntro">
+      <h1 class="directions">General Test Information</h1>
+      <p>In the <strong>Reading</strong> section, you will answer questions about three reading passages.</p>
+      <p>In the <strong>Listening</strong> section, you will answer questions about two conversations and four lectures.</p>
+      <p>In the <strong>Speaking</strong> section, you will response to six questions. Two questions ask the test taker to speak about a familiar topic. The other four questions ask the test taker to speak about lectures, conversations, and reading passages.</p>
+      <p>In the <strong>Writing</strong> section, you will write responses to two questions. One question asks the task taker to write about the relationship between a lecture they have heard and a passage they have read.</p>
+      <p>Click on <strong>Continue</strong> to go on.
+    </div>
+<!--reading section Frame-->
+    <div id="readingSectionDirections">
+      <h1 class="directions">Reading Section Directions</h1>
+      <p>The Reading section measures your ability to understand academic passages in English.</p>
+      <p>In the Reading section, there are two or three separately timed parts. There are three passages, and you will have 20 minutes to read the passage and answer the questions.</p>
+      <p>Most questions in the Reading section are worth one point, but the last question in each set is worth more than one point. The directions indicate how many points you may receive. Some passages include a word or phrase that is <span class="glossaryUnderlined">underlined</span> in blue. Click the word or phrase to see a definition or explanation.</p>
+      <p>Within each part, you can go to the next question by clicking <strong>Next</strong>. You may skip questions and go back to them later. If you want to return to previous questions, click <strong>Back</strong>. You can click <strong>Review</strong> at any time, and the review screen will show you which questions you have answered and which you have not answered. From this review screen, you may go directly to any question you have already seen in the Reading section.</p>
+      <p>You may now begin the Reading section.</p>
+      <p>Click on <strong>Continue</strong> to go on.</p>
+    </div>
+    <div id="readingSplitWindow">
+      <div id="readingContent">
+	<div id="readingStatusBar">
+	  <p>Beginning</p>
+	</div>
+	<div id="readingPassage">
+	</div>
+      </div>
+      <div id="readingQFrame">
+	<div id="readingQ">
+	</div>
+	<div id="readingQIns">
+	  <p>Look at four squares [<span class="rInsQ"></span>] that indicate where the following sentence could be added to the passage.</p>
+	  <p id="toBeInserted"></p>
+	  <p>Where would the sentence best fit?</p>
+	  <div id="markedIndicator"><p>Click on a square [<span class="rInsQ"></span>] to add the sentence to the passage.</p></div>
+	</div>
+      </div>
+    </div>
+    <div id="readingQSumSix">
+      <p><strong>Directions:</strong> An introductory sentence for a brief summary of the passage is provided below. Complete the summary by selecting the THREE answer choices that express the most important ideas in the passage. Some sentences do not belong in the summary because they express ideas that are not presented in the passage or are minor ideas in the passage. <strong><em>This question is worth 2 points.</em></strong></p>
+      <div id="summaryIndicator"><div><p>Drag your answer choices to the spaces where they belong. To remove an answer choice, click on it. To review the passage, click <strong>View Text</strong>.</p></div></div>
+      <p id="readingQSumSixHead"></p>
+      <ul id="readingQSumSixAns">
+	<li><a href="javascript:" onclick="sumSixUnclick(0);"></a></li>
+	<li><a href="javascript:" onclick="sumSixUnclick(1);"></a></li>
+	<li><a href="javascript:" onclick="sumSixUnclick(2);"></a></li>
+      </ul>
+      <h1>Answer Choices</h1>
+      <div id="readingQSumSixChoices">
+	<ul id="readingQSumSixChoicesL">
+	</ul>
+	<ul id="readingQSumSixChoicesR">
+	</ul>
+      </div>
+    </div>
+    <div id="readingReview">
+      <p>Below is the list of questions in this section. The question you were looking at last is highlighted when you enter Review. The Status colume shows if a question has been answered, not answered, or not seen. When a question is worth more than one point, the Status column will indicate that the question has been answered, even if it is only partially answered.</p>
+      <p>To review a specific question from the list, click on the question to highlight it, then click on <strong>Go to Question</strong> at the top of the screen. When there are more questions than will fit on the screen, you can use the scroll bar to view the others.</p>
+      <p>To leave Review and return to where you were in the test, click on <strong>Return</strong>.</p>
+    </div>
+    <div id="readingHaveTime">
+      <p>You have seen all of the questions of the Reading section. You may go back and review. As long as there is time remaining, you can check your work.</p>
+      <p>Click on <strong>Return</strong> to continue working.</p>
+      <p>Click on <strong>Review</strong> to see the review screen for this section.</p>
+      <p>Once you leave the Reading section, you WILL NOT be able to return to it.</p>
+      <p>Click on <strong>Continue</strong> to go on.</p>
+    </div>
+<!--reading section Float-->
+    <div id="readingGlossary">
+      <p id="readingGlossaryTitle">Glossary</p>
+      <p id="readingGlossaryContents"><strong>Shamans</strong>: blahblahblah very very very long long hahahaha blah</p>
+      <a id="glossaryClose"></a>
+    </div>
+<!--reading section end-->
+<!--listening section begin-->
+    <div id="listeningSectionDirections">
+      <h1 class="directions">Listening Section Directions</h1>
+      <p>The Reading section measures your ability to understand academic passages in English.</p>
+      <p>In the Reading section, there are two or three separately timed parts. There are three passages, and you will have 20 minutes to read the passage and answer the questions.</p>
+      <p>Most questions in the Reading section are worth one point, but the last question in each set is worth more than one point. The directions indicate how many points you may receive. Some passages include a word or phrase that is <span class="glossaryUnderlined">underlined</span> in blue. Click the word or phrase to see a definition or explanation.</p>
+      <p>Within each part, you can go to the next question by clicking <strong>Next</strong>. You may skip questions and go back to them later. If you want to return to previous questions, click <strong>Back</strong>. You can click <strong>Review</strong> at any time, and the review screen will show you which questions you have answered and which you have not answered. From this review screen, you may go directly to any question you have already seen in the Reading section.</p>
+      <p>You may now begin the Reading section.</p>
+      <p>Click on <strong>Continue</strong> to go on.</p>
+    </div>
+
+<!-- add new -->
+
+  </div>
+  <script type="text/javascript" src="data/readingSets.js"></script>
+  <script type="text/javascript" src="html/reading.js"></script>
+  <script type="text/javascript" src="html/init.js"></script>
+</body>
+</html>
+

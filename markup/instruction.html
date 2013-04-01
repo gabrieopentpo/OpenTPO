@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>openTPO Markup Instructions</title>
+  <style>
+    .example{
+    border: 1px solid black;
+    }
+    .mark{
+    background: #c0c0c0;
+    }
+  </style>
+</head>
+<body>
+<h1>openTPO Markup Instructions - 0.1.0.0_alpha</h1>
+<p>openTPO stores data as elements of a string array in JavaScript source file. Reading passage and reading questions are put together. However, these data are a little bit more than plain text.</p>
+<p>Don't worry! The markup syntax is really easy for everyone to create and edit. As openTPO development team, we wish everyone join our work. Markup is not a barrier - it is in fact a helper.</p>
+<section>
+<h2>Where are these data?</h2>
+<p>All data related to the test set live in the <code>data</code> folder.</p>
+<p><code>readingSets.js</code> ---- reading passages and questions</p>
+</section>
+<section>
+<h2>Reading Section</h2>
+<p>Suppose you are going to markup a reading passage. Here's its contents:</p>
+<section class="example">
+<h3>Title of the sample passage</h3>
+<p>This is the first paragraph. We will mark it with an arrow.</p>
+<p>This is the second paragraph. We will mark the phrase comic book.</p>
+<p>This is the third paragraph. We will mark it with an arrow. And we will insert a sentence in this paragraph. Where would you put it? Do you have any idea?</p>
+</section>
+<p>Besides, there are some questions:</p>
+<section class="example">
+<ol>
+  <li>
+    <p>What's the main purpose of Paragraph 1?</p>
+    <ul>
+      <li>I don't know.</li>
+      <li>God knows.</li>
+      <li>......</li>
+      <li>The openTPO team knows.</li>
+    </ul>
+    <p>Paragraph 1 is marked with an arrow.</p>
+  </li>
+  <li>
+    <p>What does the phrase <span class="mark">comic book</span> refer to?</p>
+    <ul>
+      <li>I don't know, either.</li>
+      <li>God knows.</li>
+      <li>......</li>
+      <li>The openTPO team knows again.</li>
+    </ul>
+  </li>
+  <li>
+    <p>Even it seems weird, but is there any connections between Paragraph 1 and Paragraph 3? <strong>Choose 2 correct answers.</strong></p>
+    <ul>
+      <li>Unfortunately, still I don't know.</li>
+      <li>God knows, the third time.</li>
+      <li>......</li>
+      <li>I'm sure openTPO team knows.</li>
+    </ul>
+    <p>Paragraph 1 and 3 are marked with arrows.</p>
+  </li>
+  <li>
+    <p>Look at four squares that indicate where the following sentence could be added to the passage.</p>
+    <p><strong>Hey jude, don't be afraid!</strong></p>
+    <p>Where would the sentence best fit?</p>
+    <p>Click on a square to add the sentence to the passage.</p>
+  </li>
+  <li>
+    <p><strong>Directions:</strong> An introductory sentence for a brief summary of the passage is provided below. Complete the summary by selecting the THREE answer choices that express the most important ideas in the passage. Some sentences do not belong in the summary because they express ideas that are not presented in the passage or are minor ideas in the passage. <strong><em>This question is worth 2 points.</strong></em></p>
+    <p><strong>This reading is entirely an example.</strong></p>
+    <ul>
+      <li>I'm not afraid now. I'm just boring.</li>
+      <li>This time god knows nothing.</li>
+      <li>zzzzzz...</li>
+      <li>Your team must have had a hard time.</li>
+      <li>Hey! The directions are even longer than the passage!</li>
+      <li>Now it's finally finished.</li>
+    </ul>
+  </li>
+</ol>
+</section>
+<p></p>
+
+</section>
+</body>
+</html>
