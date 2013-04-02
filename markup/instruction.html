@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>openTPO Markup Instructions</title>
+  <title>openTPO Mark Language Instructions</title>
   <style>
     .example{
     border: 1px solid black;
@@ -12,9 +12,9 @@
   </style>
 </head>
 <body>
-<h1>openTPO Markup Instructions - 0.1.0.0_alpha</h1>
+<h1>openTPO Mark Language Instructions - 0.1.0.0_alpha</h1>
 <p>openTPO stores data as elements of a string array in JavaScript source file. Reading passage and reading questions are put together. However, these data are a little bit more than plain text.</p>
-<p>Don't worry! The markup syntax is really easy for everyone to create and edit. As openTPO development team, we wish everyone join our work. Markup is not a barrier - it is in fact a helper.</p>
+<p>Don't worry! The mark language is really easy for everyone to create and edit. As openTPO development team, we wish everyone join our work. Marking is not a barrier - it is in fact a good helper which would save plenty of work time!</p>
 <section>
 <h2>Where are these data?</h2>
 <p>All data related to the test set live in the <code>data</code> folder.</p>
@@ -22,7 +22,8 @@
 </section>
 <section>
 <h2>Reading Section</h2>
-<p>Suppose you are going to markup a reading passage. Here's its contents:</p>
+<h3>Have an overall feel about what to do</h3>
+<p>Suppose you are going to deal with a reading passage. Here's its contents:</p>
 <section class="example">
 <h3>Title of the sample passage</h3>
 <p>This is the first paragraph. We will mark it with an arrow.</p>
@@ -81,8 +82,50 @@
   </li>
 </ol>
 </section>
-<p></p>
+<p>It seems really complicated, doesn't it? However, your work is quite simple. Here's what you need to submit:</p>
+<p>First of all, you need to inform us which passsage you have worked.</p>
+<section class="example">
+My work: TPO 6, first reading passage.
+</section>
+<p>Then, it comes to the passage itself. Here shows the mark language. Don't feel disappointed if you cannot get them.</p>
+<section class="example">
+Title of the sample passage||This is the first paragraph. We will mark it with an arrow.>>1||This is the second paragraph. We will mark the phrase ##2comic book##.||This is the third paragraph. ^^4We will mark it with an arrow. ^^4And we will insert a sentence in this paragraph. ^^4Where would you put it? ^^4Do you have any idea?>>1>>3
+</section>
+<p>Finally, the questions show up.</p>
+<section class="example">
+1::1::What\'s the main purpose of Paragraph 1?::I don\'t know.||God knows.||......||The openTPO team knows.::1---2::1::What does the phrase ##comic book## refer to?::I don\'t know, either.||God knows.||......||The openTPO team knows again.::2---1::2::Even it seems weird, but is there any connections between Paragraph 1 and Paragraph 3?::Unfortunately, still I don\'t know.||God knows, the third time.||......||I\'m sure openTPO team knows.::24---3::4::Hey jude, don\'t be afraid!::4---all::6::This reading is entirely an example.::I\'m not afraid now. I\'m just boring.||This time god knows nothing.||zzzzzz...||Your team must have had a hard time.||Hey! The directions are even longer than the passage!||Now it\'s finally finished.::245
+</section>
+<p>Next, let's split them into parts. I'll show you how to deal with a reading passage and its questions.</p>
 
+<h3>Mark the reading passage</h3>
+<p>4 types of mark will be introduced. They are:
+<ul>
+<li>||</li>
+<li>##x...##</li>
+<li>&gt;&gt;x</li>
+<li>^^x</li>
+</ul>
+<p>Here, I would like to list the sample passage again just for convenience.</p>
+<section class="example">
+<h3>Title of the sample passage</h3>
+<p>This is the first paragraph. We will mark it with an arrow.</p>
+<p>This is the second paragraph. We will mark the phrase comic book.</p>
+<p>This is the third paragraph. We will mark it with an arrow. And we will insert a sentence in this paragraph. Where would you put it? Do you have any idea?</p>
+</section>
+<h4>Paragraph seperator: ||</h4>
+<p>Like its name, paragraph seperator simply appears when a new paragraph begins. Also, it seperates heading and first paragraph. Let's replace the newlines with "||" in our sample passage:</p>
+<section class="example">
+Title of the sample passage||This is the first paragraph. We will mark it with an arrow.||This is the second paragraph. We will mark the phrase comic book.||This is the third paragraph. We will mark it with an arrow. And we will insert a sentence in this paragraph. Where would you put it? Do you have any idea?
+</section>
+<h4>Highlight marker: ##</h4>
+<p>Sometimes a word or phrase or sentence in the passage should be highlighed with grey background. As we all know, highlights are associated with questions. So we should simultaneously add the number of the corresponding question.</p>
+<p>Continue work on the sample passage. We find that Question 2 wants us to highlight the phrase "comic book". What we should do is to substitute "comic book" with "##2comic book##". If it is question 12 that needs highlight, we could similarly mark it as "##12the word##".</p>
+<p><em>Attention: Question number starts from 1, and is counted only in this individual passage. Although openTPO automatically counts the questions in previous reading, marking an individual passage should start over.</em></p>
+<p>Marked with "##", the sample passage would be:</p>
+<section class="example">
+Title of the sample passage||This is the first paragraph. We will mark it with an arrow.||This is the second paragraph. We will mark the phrase ##2comic book##.||This is the third paragraph. We will mark it with an arrow. And we will insert a sentence in this paragraph. Where would you put it? Do you have any idea?
+</section>
+<h4>Arrow indicator: &gt;&gt;</h4>
 </section>
 </body>
 </html>
