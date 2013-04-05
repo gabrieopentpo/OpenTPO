@@ -117,10 +117,12 @@ function __addStyleSheet(Id, str){
 function __id(Id){
     return document.getElementById(Id);
 }
+var voidFunction = function(){
+};
 //include functions end
 
 
-//data structure definitions
+//general structure definitions
 var _reading = function(){
     var text = new Array();
     var seen = new Array();
@@ -165,6 +167,10 @@ var _reading = function(){
 	    }
 	    return i;
 	},
+	questionStart : function(pnum){
+	    if (pnum === 0) return 0;
+	    return last[pnum - 1];
+	},
 	hasSeen : function(pnum){
 	    return seen[pnum];
 	},
@@ -184,6 +190,7 @@ var generalTimer = function(){
     var timeremain = 0;
     var counting = false;
     var showing = false;
+    var outoftime = '';
     var controller;
     function updateReadableTimer(thetime){
 	var hourN = thetime / 3600;
@@ -200,16 +207,22 @@ var generalTimer = function(){
 	if (timeremain <= 0) return;
 	timeremain--;
 	updateReadableTimer(timeremain);
-	controller = setTimeout(countWorker, 1000);
+	if (timeremain === 0){
+	    notify.show('blue', 'Time out', '<p>Time exceeds. Your answers have been saved.</p><p>Press <strong>Continue</strong> to leave this part.</p>', [['Continue', outoftime]], false);
+	    generalTimer.discard();
+	}else{
+	    controller = setTimeout(countWorker, 1000);
+	}
     }
     return {
-	init : function(thetime){
+	init : function(thetime, outoftimeproceed){
 	    if (counting){
 		this.stop();
 	    }
 	    if (showing){
 		this.hide();
 	    }
+	    outoftime = outoftimeproceed;
 	    timeremain = thetime;
 	    updateReadableTimer(timeremain);
 	},
@@ -228,14 +241,17 @@ var generalTimer = function(){
 	start : function(){
 	    if (counting) return;
 	    counting = true;
-	    __show('pauseTestButton');
+	    if (tpoMode === 1){
+		__show('pauseTestButton');
+		__id('pauseTestButton').onclick = function(){
+		    generalTimer.stop();
+		};
+	    }
 	    __hide('resumeTestButton');
-	    __id('pauseTestButton').onclick = function(){
-		generalTimer.stop();
-	    };
 	    controller = setTimeout(countWorker, 1000);
 	},
 	stop : function(){
+	    if (tpoMode !== 1) return;
 	    if (!counting) return;
 	    counting = false;
 	    __hide('pauseTestButton');
@@ -251,10 +267,14 @@ var generalTimer = function(){
 	    }else{
 		this.hide();
 	    }
-	    if (counting){
-		__show('pauseTestButton');
-	    }else{
-		__hide('pauseTestButton');
+	    if (tpoMode === 1){
+		if (counting && tpoMode === 1){
+		    __show('pauseTestButton');
+		    __hide('resumeTestButton');
+		}else{
+		    __hide('pauseTestButton');
+		    __show('resumeTestButton');
+		}
 	    }
 	},
 	discard : function(){
@@ -263,31 +283,143 @@ var generalTimer = function(){
 	}
     }
 }();
-//data structure definitions end
+
+var notify = function(){
+    var colorTable = {};
+    colorTable.green = ['#30b030', '#dfd'];
+    colorTable.red = ['#b03030', '#fdd'];
+    colorTable.yellow = ['#f0b020', '#ffd'];
+    colorTable.blue = ['#6060d0', '#ddf'];
+    var addColor = function(thecolor){
+	var str = '#notificationHeader {background: ' + colorTable[thecolor][0] + '} #notification {background: ' + colorTable[thecolor][1] + '}';
+	__addStyleSheet('styleNotifyColor', str);
+    };
+    var temp = [];
+    return {
+	close : function(){
+	    __hide('notifySystem');
+	},
+	show : function(color, title, content, buttonsArray, haveCloseButton){
+	    //buttonsArray = [[xxx, "function();"], ...]
+	    if (haveCloseButton === undefined) haveCloseButton = false;
+	    var str;
+	    str = '<p>' + title + '</p>' + ((haveCloseButton) ? '<a id="notifyClose"></a>' : '');
+	    __id('notificationHeader').innerHTML = str;
+	    __id('notificationContent').innerHTML = content;
+	    var node = __id('notifyButtonsWrapper');
+	    __deleteAllChild(node);
+	    var i;
+	    var newnode;
+	    var that = this;
+	    for (i = 0; i < buttonsArray.length; i++){
+		temp[i] = buttonsArray[i][1];
+		newnode = __appendNode(node, 'a');
+		newnode.className = 'notifyButtons';
+		newnode.href = 'javascript:';
+		newnode.onclick = Function(buttonsArray[i][1] + 'notify.close();');
+		__appendTextNode(newnode, buttonsArray[i][0]);
+	    }
+	    if (haveCloseButton){
+		__id('notifyClose').onclick = this.close;
+	    }
+	    __deleteId('styleNotifyColor');
+	    addColor(color);
+	    __show('notifySystem');
+	}
+    }
+}();
+var storage = function(){
+    return {
+	reset : function(){
+	    var i, j, temp, tempj;
+	    this.save('init', 1);
+	    for (i = 1; i <= allSets; i++){
+		temp = i.toString();
+		this.save(temp + 't', 0);
+		for (j = 0; j <= 50; j++){
+		    var tempj = j.toString();
+		    this.save(temp + 'r-q' + tempj, 0);
+		    this.save(temp + 'l-q' + tempj, 0);
+		}
+		for (j = 0; j < 3; j++){
+		    var tempj = j.toString();
+		    this.save(temp + 'r' + tempj + 's', 0);
+		    this.save(temp + 'l' + tempj + 's', 0);
+		}
+		for (j = 0; j < 6; j++){
+		    var tempj = j.toString();
+		    this.save(temp + 's' + tempj + 's', 0);
+		}
+		this.save(temp + 'w1', '');
+		this.save(temp + 'w2', '');
+	    }
+	},
+	load : function(str){
+	    //2r-q3 : set02, reading, question03
+	    //2r1s : set02, reading, status01 - seen 1, notseen 0
+	    //2t : set02, tested 1, nottested 0
+	    //2l-q3/2l1s
+	    //2s1s : set02, speaking, status1 - seen 1, notseen 0
+	    //2w1/2w2
+	    //init
+	    var a = localStorage.getItem(str);
+	    if (a === null || a === undefined){
+		this.save(str, 0);
+	    }
+	    return localStorage.getItem(str);
+	},
+	save : function(str, value){
+	    localStorage.setItem(str, value.toString());
+	}
+    }
+}();
+//general structure definitions end
 
 
-
+//global variables
 var testSet = 0;
 var allSets = 26;
 var tpoMode = 0; //test=0 practice=1 review=2
+var practiceHalt = 0; //reading 1~3 && -1: All reading/listening
 var nowSection = 0; //r=0 l=1 s=2 w=3
+//global variables end
+
+
 //init
+__id('pagewrapper').onselectstart = __id('pagewrapper').ondrag = function(){
+    return false;
+} //disable selection
+
 for (var i = 1; i <= allSets; i++){
     var thisset = 'TPO ' + parseInt(i / 10) + i % 10;
     var node = __id('setSelectButtons');
     var newButton = document.createElement('a');
     newButton.className = 'whiteButtonsSetSelect';
     newButton.href = 'javascript:';
-    newButton.onclick = Function('testSet = ' + i + '; prepareSet(' + i + ');');
+    newButton.onclick = function(i){
+	return function(){
+	    testSet = i;
+	    readingPreprocess(_readingmaterial[i - 1]);
+	    switch(tpoMode){
+	    case 0:
+		__hideAll();
+		showTestIntro();
+		break;
+	    case 1:
+		notify.show('blue', 'Select section', '<p>Which section of test set ' + testSet + ' would you like to take?</p><p>This version of openTPO includes only reading section. Please keep up with our update!</p>', [['Reading', '__hideAll();readingHub("directions");']], true);
+		break;
+	    case 2:
+		__hideAll();
+		showReviewChart();
+		break;
+	    default:
+		break;
+	    }
+	}
+    }(i);
     node.appendChild(newButton);
     __appendTextNode(newButton, thisset);
 }
-function prepareSet(i){
-    readingPreprocess(_readingmaterial[i - 1]);
-    __hideAll();
-    showTestIntro();
-}
-
 
 function resetSystem(){
     __hideAll();
@@ -302,12 +434,24 @@ function resetSystem(){
 __id('testModeButton').onclick = function(){
     __hideAll();
     __show('setSelectPage');
+    __id('questionNumber').innerHTML = 'Test Mode';
+    __show('questionNumber');
     tpoMode = 0;
+    __show('backButton');
+};
+__id('practiceModeButton').onclick = function(){
+    __hideAll();
+    __show('setSelectPage');
+    __id('questionNumber').innerHTML = 'Practice Mode';
+    __show('questionNumber');
+    tpoMode = 1;
     __show('backButton');
 };
 __id('reviewModeButton').onclick = function(){
     __hideAll();
     __show('setSelectPage');
+    __id('questionNumber').innerHTML = 'Review Mode';
+    __show('questionNumber');
     tpoMode = 2;
     __show('backButton');
 };
@@ -336,13 +480,25 @@ __id('acknowledgeLink').onclick = function (){
     __show('acknowledgePage');
     __show('backButton');
 };
+__id('helpButton').onclick = function(){
+    notify.show('green', 'Help', '<p>openTPO simulates the process and appearance of the actual test. If you are not sure about something, you are encouraged to try it out. In actual test, pressing <strong>Help</strong> button will show a help window.</p><p>Remember: the clock does NOT stop while you are reading instructions in Help in the actual test.</p>', [['OK', '']], false);
+};
 __id('testExitButton').onclick = function (){
-    alert('Test will exit! Your progress has been saved.');
-    clearThisSection();
-    resetSystem();
+    notify.show('yellow', 'Exit Test', '<p>Are you going to exit the test? Your progress has been saved automatically.</p>', [['Exit', 'clearThisSection();resetSystem();'], ['Cancel', '']], false);
+};
+__id('sectionExitButton').onclick = function (){
+    notify.show('yellow', 'Exit Section', '<p>Are you going to exit this section? Your progress has been saved automatically.</p>', [['Exit', 'exitThisSection();'], ['Cancel', '']], false);
+};
+__id('resetStorage').onclick = function(){
+    notify.show('red', 'DANGEROUS', '<p>This operation will reset your local storage. All of your answers will be lost. Are you sure?</p>', [['Commit', 'storage.reset();'], ['Cancel', '']], true);
 };
 
 resetSystem();
+
+//first-start instructions & clean storage
+if (storage.load('init') === '0'){
+    notify.show('green', 'First start', '<p>Welcome to openTPO!</p><p>It would be helpful to know more about openTPO by clicking <strong>About</strong> and <strong>Help</strong> link on the page.</p>', [['OK', 'storage.reset();']], false);
+}
 
 function clearThisSection(){
     switch(nowSection){
@@ -362,22 +518,6 @@ function clearThisSection(){
 	break;
     }
 }
-
-
-if (localStorage.getItem('recorded') === null){
-    resetLocalStorage();
-}
-
-function resetLocalStorage(){
-    localStorage.setItem('recorded', '1');
-    for (var i = 1; i < 40; i++){
-	localStorage.setItem('r' + i, '0');
-	for (var j = 1; j < 50; j++){
-	    localStorage.setItem('r' + i + '|' + j, '0');
-	}
-    }
-}
-
 function showTestIntro(){//test intro only appears in Test Mode
     if (tpoMode === 2){
 	showReviewChart();
@@ -391,87 +531,6 @@ function showTestIntro(){//test intro only appears in Test Mode
 	readingHub('directions');
     };
 }
-/*
-function showReviewChart(){
-    __id('backButton').onclick = function(){
-	resetSystem();
-    }
-    __show('backButton');
-    __show('reviewChart');
-    generateReviewReadingChart();
-}
-
-function generateReviewReadingChart(){
-
-    function getMyAnswerReadable(Tquestion){
-	var ans = localStorage.getItem('r' + testSet + '|' + Tquestion);
-	var str = '';
-	for (var i = 0; i < 10; i++){
-	    if ((ans & (1 << i)) !== 0){
-		str += (i + 1).toString();
-	    }
-	}
-	return str;
-    }
-    function getCorrectAnswerReadable(reading, question){
-	var temp = readingPassages[reading].questions[question].ansCorrect;
-	if (temp.length){
-	    var str = '';
-	    for (var i = 0; i < temp.length; i++){
-		str += temp[i].toString();
-	    }
-	    return str;
-	}else{
-	    return temp.toString();
-	}
-    }
-
-
-    loadReadingPassages();
-    var allQuestion = calcQTotalNumber();
-    __deleteAllChild(__id('reviewChartReading'));
-    var tableNode = __appendNode(__id('reviewChartReading'), 'table');
-    var trNode = __appendNode(tableNode, 'tr');
-    trNode.className = 'reviewTableHead';
-    __appendTextNode(__appendNode(trNode, 'th'), '#');
-    __appendTextNode(__appendNode(trNode, 'th'), 'My answer');
-    __appendTextNode(__appendNode(trNode, 'th'), 'Correct answer');
-    for (var i = 1; i <= allQuestion; i++){
-	var temp = splitReadingQNum(i);
-	var thisReading = temp[0];
-	var thisQuestion = temp[1];
-	trNode = __appendNode(tableNode, 'tr');
-	__appendTextNode(__appendNode(trNode, 'td'), i.toString());
-	var myans = getMyAnswerReadable(i);
-	var coans = getCorrectAnswerReadable(thisReading, thisQuestion);
-	__appendTextNode(__appendNode(trNode, 'td'), myans);
-	__appendTextNode(__appendNode(trNode, 'td'), coans);
-	if (myans === coans){
-	    trNode.className = 'reviewTableCorrect';
-	}
-	else{
-	    trNode.className = 'reviewTableIncorrect';
-	}
-    }
-}
-function splitReadingQNum(Tquestion){
-    var reading = 1;
-    var question = Tquestion;
-    if (question > readingPassages[1].questions.length - 1){
-	question -= readingPassages[1].questions.length - 1;
-	reading++;
-    }else{
-	return [reading, question];
-    }
-    if (question > readingPassages[2].questions.length - 1){
-	question -= readingPassages[2].questions.length - 1;
-	reading++;
-    }else{
-	return [reading, question];
-    }
-    return [reading, question];
-}
-*/
 
 function readingPreprocess(originalarray){
     function readingPassagePreprocess(original, start){
@@ -527,7 +586,7 @@ function readingPreprocess(originalarray){
 		var strIns = _reading.getQ(num + qstart).sentence + ' ';
 		var len;
 		len = (num < 10) ? 1 : 2;
-		temp += '<span class="r' + (num + qstart).toString() + '"><a class="rIns" onclick="insClick(' + ((i - 1) % 4).toString() + ');"></a><strong>' + strIns + '</strong></span>' + block[i].substring(len, block[i].length);
+		temp += '<span class="r' + (num + qstart) + '"><a class="rIns" onclick="insClick(' + ((i - 1) % 4) + ', ' + (num + qstart) + ');"></a><strong>' + strIns + '</strong></span>' + block[i].substring(len, block[i].length);//insClick(0, 13)
 	    }
 	}
 	function ___glossary(){
@@ -567,18 +626,18 @@ function readingPreprocess(originalarray){
 	    if (detailq[0] === 'all'){//summary question
 		thisq.heading = detailq[2];
 		thisq.choice = detailq[3].split('||');
-		thisq.ansCorrect = parseInt(detailq[4]);
+		thisq.ansCorrect = detailq[4];
 	    }
 	    else{
 		thisq.gotoPara = parseInt(detailq[0]);
 		if (parseInt(detailq[1]) === 4){//insert
 		    thisq.sentence = detailq[2];
-		    thisq.ansCorrect = parseInt(detailq[3]);
+		    thisq.ansCorrect = detailq[3];
 		}
 		else{//single or multiple
 		    thisq.heading = ___mark(detailq[2]);
 		    thisq.choice = detailq[3].split('||');
-		    thisq.ansCorrect = parseInt(detailq[4]);
+		    thisq.ansCorrect = detailq[4];
 		}
 	    }
 	    //alert(j.toString() + thisq.heading);
@@ -601,6 +660,8 @@ function readingHub(status){
 	thePassage.innerHTML = _reading.getText(num);
     }
     function updateQuestion(qnum){
+	var i;
+	var origans = parseInt(storage.load(testSet.toString() + 'r-q' + qnum), 10);
 	__deleteId('insStyle'); //delete the tracks of InsertQuestion
 	//and generate and show question number in the header
 	__deleteAllChild(__id('questionNumber'));
@@ -630,32 +691,10 @@ function readingHub(status){
 	    __show('viewTextButton');
 	    __addStyleSheet('summaryNoBar', '#readingStatusBar {display: none !important;} #readingPassage {top: 0 !important;}');
 	    __hide('readingSplitWindow');
-	    /*
-	    if (sumMap[nowReading - 1] === 0){//not reached
-		sumMap[nowReading - 1] = [-1, -1, -1];
-	    }
+
 	    __deleteAllChild(__id('readingQSumSixHead'));
 	    __appendTextNode(__id('readingQSumSixHead'), theQ.heading);
-	    __deleteAllChild(__id('readingQSumSixChoicesL'));
-	    var listNode = __id('readingQSumSixChoicesL');
-	    for (var i = 0; i < 3; i++){
-		var tempNode;
-		__appendTextNode(tempNode = __appendNode(__appendNode(listNode, 'li'), 'a'), theQ.choice[i]);
-		tempNode.id = 'tempstyleSumSix' + i.toString();
-		tempNode.href = 'javascript:';
-		tempNode.onclick = Function('sumSixClick(' + i.toString() + ');');
-	    }
-	    __deleteAllChild(__id('readingQSumSixChoicesR'));
-	    listNode = __id('readingQSumSixChoicesR');
-	    for (var i = 3; i < 6; i++){
-		var tempNode;
-		__appendTextNode(tempNode = __appendNode(__appendNode(listNode, 'li'), 'a'), theQ.choice[i]);
-		tempNode.id = 'tempstyleSumSix' + i.toString()
-		tempNode.href = 'javascript:';
-		tempNode.onclick = Function('sumSixClick(' + i.toString() + ');');
-	    }
-	    __show('readingQSumSix');
-	    sumSixDisplayUpdate();*/
+	    sumSix.update(qnum);
 	}
 	else if (theQ.type < 3){ //normal or multiple question
 	    __hide('readingQIns');
@@ -663,35 +702,52 @@ function readingHub(status){
 	    var qNode = __id('readingQ');
 	    __deleteAllChild(qNode);
 	    var qhStr = theQ.heading;
+
 	    if (theQ.type === 2){//if it is a multiple question, we should give some instructions
 		qhStr += ' <strong>Choose 2 correct answers.</strong>';
 	    }
+
 	    __appendNode(qNode, 'p').innerHTML = qhStr;
 	    var choiceList = __appendNode(qNode, 'ul');
+
 	    if (theQ.type === 1){
 		var choiceClass = 'oval';
 	    }
 	    else{
 		var choiceClass = 'square';
 	    }
-	    for (var i = 0; i <= 3; i++){
+
+	    for (i = 0; i <= 3; i++){
 		var liNode = __appendNode(choiceList, 'li');
 		var aNode = __appendNode(liNode, 'a');
 		aNode.href = 'javascript:';
-		liNode.onclick = Function(choiceClass + 'Click(' + i.toString() + ');');
+		liNode.onclick = function(choiceClass, i, qnum){
+		    return function(){
+			if (choiceClass === 'oval'){
+			    ovalClickR(i.toString(), qnum);
+			}else{
+			    squareClickR(i.toString(), qnum);
+			}
+		    };
+		}(choiceClass, i, qnum);
 		__appendTextNode(aNode, theQ.choice[i]);
-		if ((readingReadAnswer[qnum] & (1 << i)) != 0){
+		if ((origans & (1 << i)) != 0){
 		    liNode.className = choiceClass + 'Selected';
 		}
 		else{
 		    liNode.className = choiceClass + 'NotSelected';
+		}
+		if (tpoMode === 2){//mark correct answer
+		    if (theQ.ansCorrect.indexOf((i + 1).toString()) >= 0){
+			liNode.getElementsByTagName('a')[0].className = 'correctChoice';
+		    }
 		}
 		liNode.id = 'choice' + i.toString();
 	    }
 	    if (theQ.markPara){
 		var arrowText = 'Paragraph ' + theQ.markPara[0] + ' ';
 		if (theQ.markPara.length > 1){
-		    for (var i = 1; i < theQ.markPara.length; i++){
+		    for (i = 1; i < theQ.markPara.length; i++){
 			arrowText += 'and ' + theQ.markPara[i] + ' ';
 		    }
 		    arrowText += 'are marked with arrows';
@@ -712,9 +768,10 @@ function readingHub(status){
 	    var theNode = __id('toBeInserted');
 	    __deleteAllChild(theNode);
 	    __appendTextNode(theNode, theQ.sentence);
-	    for (var i = 0; i < 4; i++){
-		if ((readingReadAnswer[qnum] & (1 << i)) != 0){
-		    insClick(i);
+	    insUpdate(-1, qnum);//if user selected no answer, the correct answer should be marked automatically in review mode.
+	    for (i = 0; i < 4; i++){
+		if ((origans & (1 << i)) !== 0){
+		    insUpdate(i, qnum);
 		    break;
 		}
 	    }
@@ -740,7 +797,7 @@ function readingHub(status){
 	__show('reviewButtonGrey');
 	__show('continueButton');
 	__id('continueButton').onclick = function(){
-	    generalTimer.init(3600);
+	    generalTimer.init(3600, 'readingSectionEnd();');
 	    generalTimer.start();
 	    generalTimer.show();
 	    readingHub(0);//question no.1 ready!
@@ -759,9 +816,13 @@ function readingHub(status){
 	    readingHub(_reading.totalQ() - 1);
 	};
 	__id('continueButton').onclick = function(){
-	    clearReadingSection();
-	    resetSystem();
-	};//temporarily halt the test, since listening section is not ready
+	    if (tpoMode === 0){
+		notify.show('green', 'Notice', '<p>Since this version of openTPO includes only reading section, the test will end after clicking on <strong>OK</strong>. Please keep up with our update!</p>', [['OK', 'readingSectionEnd();']], false);
+	    }//temporarily halt the test, since listening section is not ready
+	    else if (tpoMode === 1){
+		notify.show('green', 'Notice', '<p>This is the end of reading section. You will go back to test selection page because it is <strong>Practice Mode</strong></p>.', [['OK', 'readingSectionEnd();']], false);
+	    }
+	};
 	__id('reviewSquareButton').onclick = function(){
 	    readingHub('review' + _reading.totalQ().toString());
 	};
@@ -794,7 +855,7 @@ function readingHub(status){
 	thisSeen = _reading.hasSeen(readingNumber);
 //alert(status.toString() + ' ' + readingNumber.toString());
 	updatePassage(readingNumber);
-	if (!thisSeen){
+	if (!thisSeen && tpoMode !== 2){//not review mode
 	    __deleteAllChild(__id('readingQ'));
 	    __show('continueCircleButton');
 	    __show('testExitButton');
@@ -830,23 +891,236 @@ function readingHub(status){
     }
 }
 
-var answerManager = function(){
-    return{
-	read : function(mode, qnum){
-	    return localStorage.getItem(testSet.toString() + mode + qnum.toString());
+var readingSectionEnd = function(){
+    clearReadingSection();
+    resetSystem();
+}
+var clearReadingSection = function(){
+    __hideAll();
+    generalTimer.discard();
+}
+var exitThisSection = function(){
+    switch(nowSection){
+    case 0:
+	readingSectionEnd();
+	break;
+
+    default:
+	break;
+    }
+}
+
+//choices click function
+function ovalClickR(index, qnum){
+    if (tpoMode === 2) return;
+    if (__id('choice' + index.toString()).className === 'ovalNotSelected'){ //choose it
+	for (var i = 0; i < 4; i++){
+	    __id('choice' + i.toString()).className = 'ovalNotSelected';
+	}
+	__id('choice' + index.toString()).className = 'ovalSelected';
+	storage.save(testSet.toString() + 'r-q' + qnum, 1 << index);
+    }
+    else{//cancel it
+	__id('choice' + index.toString()).className = 'ovalNotSelected';
+	storage.save(testSet.toString() + 'r-q' + qnum, 0);
+    }
+}
+function squareClickR(index, qnum){
+    if (tpoMode === 2) return;
+    var qstr = testSet.toString() + 'r-q' + qnum;
+    var origans = parseInt(storage.load(qstr), 10);
+    if (__id('choice' + index.toString()).className === 'squareNotSelected'){ //choose it
+	__id('choice' + index.toString()).className = 'squareSelected';
+	storage.save(testSet.toString() + 'r-q' + qnum, origans + (1 << index));
+    }
+    else{//cancel it
+	__id('choice' + index.toString()).className = 'squareNotSelected';
+	readingUpdateAnswer(questionNow, index, 'cancel');
+	storage.save(testSet.toString() + 'r-q' + qnum, origans - (1 << index));
+    }
+}
+function insUpdate(index, qnum){
+    __deleteId('insStyle');
+    var correct = parseInt(_reading.getQ(qnum).ansCorrect);
+    var newStyle = '';
+    var strSS = '.r' + qnum;
+    if (index >= 0){//-1 is reserved for review mode
+	newStyle = strSS + ':nth-of-type(' + (index + 1).toString() + ') a.rIns {display: none !important;}' + strSS + ':nth-of-type(' + (index + 1).toString() + ') a.rIns + strong {display: inline !important;}';
+    }
+    if (tpoMode === 2){
+	newStyle += strSS + ':nth-of-type(' + (correct).toString() + ') a.rIns {display: none !important;}' + strSS + ':nth-of-type(' + (correct).toString() + ') a.rIns + strong {display: inline !important; background: #9f9 !important;}';
+    }
+    __addStyleSheet('insStyle', newStyle);
+}
+function insClick(index, qnum){//0~~3 // only reading
+    if (tpoMode === 2) return;
+    var qstr = testSet.toString() + 'r-q' + qnum;
+    insUpdate(index, qnum);
+    storage.save(qstr, 1 << index);
+}
+var sumSix = function(){
+    //answer of sumSix is like '425', which indicates the choice that three answer frames are filled in
+    var getOrigAns = function(qnum){
+	var qstr = testSet.toString() + 'r-q' + qnum;
+	var origans = storage.load(qstr);
+	while (origans.length < 3){
+	    origans = '0' + origans;
+	}
+	return origans;
+    }
+    var saveOrigAns = function(qnum, ans){
+	var qstr = testSet.toString() + 'r-q' + qnum;
+	storage.save(qstr, ans);
+    }
+    return {
+	check : function(index, qnum){
+	    var origans = getOrigAns(qnum);
+	    var pos = origans.indexOf(index.toString());
+	    return ((pos === -1) ? false : true);
 	},
-	write : function(mode, qnum, ans){
-	    localStorage.setItem(testSet.toString() + mode + qnum.toString(), ans);
+	add : function(index, qnum){//0~5
+	    if (tpoMode === 2) return;
+	    var origans = getOrigAns(qnum);
+	    var pos = origans.indexOf('0');
+	    if (pos != -1){
+		origans = origans.slice(0, pos) + (index + 1).toString() + origans.slice(pos + 1);
+	    }
+	    saveOrigAns(qnum, origans);
+	    this.update(qnum);
 	},
-	touch : function(mode){
-	    localStorage.setItem(testSet.toString() + mode, 1);
+	cancel : function(index, qnum){//0~2
+	    if (tpoMode === 2) return;
+	    var origans = getOrigAns(qnum);
+	    origans = origans.slice(0, index) + '0' + origans.slice(index + 1);
+	    saveOrigAns(qnum, origans);
+	    this.update(qnum);
 	},
-	touched: function(mode){
-	    if (localStorage.getItem(testSet.toString() + mode)){
-		return true;
-	    }else{
-		return false;
+	update : function(qnum){
+	    var i;
+	    var origans = getOrigAns(qnum);
+	    var choosed = [false, false, false, false, false, false];
+	    var thischoice;
+	    var theQ = _reading.getQ(qnum);
+	    for (i = 0; i < 3; i++){
+		if (origans.charAt(i) !== '0'){//choosed
+		    thischoice = parseInt(origans.charAt(i), 10) - 1;
+		    choosed[thischoice] = true;
+		    __id('dynamicSumSixAnswer' + i).innerHTML = theQ.choice[thischoice];
+		    __id('dynamicSumSixAnswer' + i).onclick = function(i, qnum){
+			return function(){
+			    sumSix.cancel(i, qnum);
+			}
+		    }(i, qnum);
+		    if (tpoMode === 2 && theQ.ansCorrect.indexOf((thischoice + 1).toString()) >= 0){
+			__id('dynamicSumSixAnswer' + i).className = 'correctChoice';
+		    }
+		}else{
+		    __id('dynamicSumSixAnswer' + i).innerHTML = '&nbsp;';//we reserve a blank character here, otherwise the page layout would be confusing.
+		    __id('dynamicSumSixAnswer' + i).onclick = voidFunction;
+		}
+	    }
+	    for (i = 0; i < 6; i++){
+		if (choosed[i]){
+		    __id('dynamicSumSixChoice' + i).innerHTML = '&nbsp;';
+		    __id('dynamicSumSixChoice' + i).onclick = voidFunction;
+		}else{
+		    __id('dynamicSumSixChoice' + i).innerHTML = theQ.choice[i];
+		    __id('dynamicSumSixChoice' + i).onclick = function(i, qnum){
+			return function(){
+			    sumSix.add(i, qnum);
+			}
+		    }(i, qnum);
+		    if (tpoMode === 2 && theQ.ansCorrect.indexOf((i + 1).toString()) >= 0){
+			__id('dynamicSumSixChoice' + i).className = 'correctChoice';
+		    }
+		}
 	    }
 	}
     }
 }();
+
+
+// review mode
+function showReviewChart(){
+    __id('backButton').onclick = function(){
+	resetSystem();
+	__hideAll();
+	__show('setSelectPage');
+	__show('backButton');
+    }
+    __show('backButton');
+    __show('gotoQuestionButton');
+    __id('gotoQuestionButton').onclick = voidFunction;
+    __show('reviewChart');
+    generateReviewReadingChart();
+}
+
+var reviewGoto = function(mode, qnum){
+    if (mode === 'r'){
+	readingHub(qnum);
+	return;
+    }
+}
+
+function generateReviewReadingChart(){
+    __deleteAllChild(__id('reviewChartReading'));
+    var tableNode = __appendNode(__id('reviewChartReading'), 'table');
+    var trNode = __appendNode(tableNode, 'tr');
+    var myans;
+    var coans;
+    var theQ;
+    var i, j, temp;
+    trNode.className = 'reviewTableHead';
+    __appendTextNode(__appendNode(trNode, 'th'), '#');
+    __appendTextNode(__appendNode(trNode, 'th'), 'My answer');
+    __appendTextNode(__appendNode(trNode, 'th'), 'Correct answer');
+    for (i = 0; i < _reading.totalQ(); i++){
+	trNode = __appendNode(tableNode, 'tr');
+	__appendTextNode(__appendNode(trNode, 'td'), (i + 1).toString());
+	theQ = _reading.getQ(i);
+	coans = theQ.ansCorrect; //it's a string
+	switch(theQ.type){
+	case 1:
+	case 2:
+	case 4:
+	    myans = '';
+	    temp = storage.load(testSet.toString() + 'r-q' + i);
+	    for (j = 0; j < 4; j++){
+		if ((temp & (1 << j)) !== 0){
+		    myans += (j + 1).toString();
+		}
+	    }
+	    break;
+	case 6:
+	    myans = '';
+	    for (j = 1; j <= 6; j++){
+		if (sumSix.check(j, i)){
+		    myans += j.toString();
+		}
+	    }
+	    break;
+	default:
+	    break;
+	}
+	if (myans === '') myans = 'none';
+	__appendTextNode(__appendNode(trNode, 'td'), myans);
+	__appendTextNode(__appendNode(trNode, 'td'), coans);
+	if (myans === coans){
+	    trNode.className = 'reviewTableCorrect';
+	}
+	else{
+	    trNode.className = 'reviewTableIncorrect';
+	}
+	trNode.onclick = function(i){
+	    return function(){
+		if (__id('reviewTableSelected') !== null){
+		    __id('reviewTableSelected').id = '';
+		}
+		__id('reviewChartReading').getElementsByTagName('tr')[i + 1].id = 'reviewTableSelected';
+		__id('gotoQuestionButton').onclick = function(){
+		    reviewGoto('r', i);
+		}
+	    }
+	}(i);
+    }
+}

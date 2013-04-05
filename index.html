@@ -5,12 +5,13 @@ All lefts reserved.
 -->
 <html>
 <head>
-  <title>opentpo-0.1_alpha</title>
+  <title>opentpo-0.2_alpha</title>
   <link rel="stylesheet" type="text/css" href="html/style.css" />
 </head>
-<body>
+<body  onselectstart="return false">
+<div id="pagewrapper">
   <div id="header">
-    <p id="pageTag">opentpo-0.1_alpha</p>
+    <p id="pageTag">opentpo-0.2_alpha</p>
     <a class="circleButtonsRight" id="nextButton"></a>
     <a class="circleButtonsRight" id="backButton"></a>
     <a class="circleButtonsRightGrey" id="nextButtonGrey"></a>
@@ -51,12 +52,12 @@ Each div refers to one certain page or frame. Use CSS or Javascript to show or h
       </div>
       <p><a href="javascript:" id="settingsLink">Settings</a></p>
       <p><a href="javascript:" id="helpLink">Help</a></p>
-      <p><a href="javascript:" id="aboutLink">About openTPO</a></p>
+      <p><a href="javascript:" id="aboutLink">About</a></p>
       <p><a href="javascript:" id="acknowledgeLink">Acknowledgements</a></p>
       <p><a href="javascript:" id="contributeLink">Contribute to this project!</a></p>
     </div>
     <div id="settingsPage">
-      <p><a href="javascript:" onclick="resetLocalStorage();">Clear all answers</a></p>
+      <p><a href="javascript:" id="resetStorage">Reset Storage</a></p>
     </div>
     <div id="helpPage">
       <h1>openTPO Help</h1>
@@ -158,15 +159,21 @@ Each div refers to one certain page or frame. Use CSS or Javascript to show or h
       <div id="summaryIndicator"><div><p>Drag your answer choices to the spaces where they belong. To remove an answer choice, click on it. To review the passage, click <strong>View Text</strong>.</p></div></div>
       <p id="readingQSumSixHead"></p>
       <ul id="readingQSumSixAns">
-	<li><a href="javascript:" onclick="sumSixUnclick(0);"></a></li>
-	<li><a href="javascript:" onclick="sumSixUnclick(1);"></a></li>
-	<li><a href="javascript:" onclick="sumSixUnclick(2);"></a></li>
+	<li><a id="dynamicSumSixAnswer0" href="javascript:"></a></li>
+	<li><a id="dynamicSumSixAnswer1" href="javascript:"></a></li>
+	<li><a id="dynamicSumSixAnswer2" href="javascript:"></a></li>
       </ul>
       <h1>Answer Choices</h1>
       <div id="readingQSumSixChoices">
-	<ul id="readingQSumSixChoicesL">
+	<ul>
+	  <li><a id="dynamicSumSixChoice0" href="javascript:"></a></li>
+	  <li><a id="dynamicSumSixChoice1" href="javascript:"></a></li>
+	  <li><a id="dynamicSumSixChoice2" href="javascript:"></a></li>
 	</ul>
-	<ul id="readingQSumSixChoicesR">
+	<ul>
+	  <li><a id="dynamicSumSixChoice3" href="javascript:"></a></li>
+	  <li><a id="dynamicSumSixChoice4" href="javascript:"></a></li>
+	  <li><a id="dynamicSumSixChoice5" href="javascript:"></a></li>
 	</ul>
       </div>
     </div>
@@ -192,11 +199,6 @@ Each div refers to one certain page or frame. Use CSS or Javascript to show or h
 <!--listening section begin-->
     <div id="listeningSectionDirections">
       <h1 class="directions">Listening Section Directions</h1>
-      <p>The Reading section measures your ability to understand academic passages in English.</p>
-      <p>In the Reading section, there are two or three separately timed parts. There are three passages, and you will have 20 minutes to read the passage and answer the questions.</p>
-      <p>Most questions in the Reading section are worth one point, but the last question in each set is worth more than one point. The directions indicate how many points you may receive. Some passages include a word or phrase that is <span class="glossaryUnderlined">underlined</span> in blue. Click the word or phrase to see a definition or explanation.</p>
-      <p>Within each part, you can go to the next question by clicking <strong>Next</strong>. You may skip questions and go back to them later. If you want to return to previous questions, click <strong>Back</strong>. You can click <strong>Review</strong> at any time, and the review screen will show you which questions you have answered and which you have not answered. From this review screen, you may go directly to any question you have already seen in the Reading section.</p>
-      <p>You may now begin the Reading section.</p>
       <p>Click on <strong>Continue</strong> to go on.</p>
     </div>
 
@@ -205,24 +207,25 @@ Each div refers to one certain page or frame. Use CSS or Javascript to show or h
   <div id="notifySystem">
     <div id="dimmer">
     </div>
-    <div id="notifyWrap">
+    <div id="notifyWrapper">
       <div id="notification">
 	<div id="notificationHeader">
-	  <p>Notice!</p>
+	  <p>Notice!</p><a id="notifyClose"></a>
 	</div>
 	<div id="notificationContent">
-	  <p>You will exit the test!</p>
+	  <p>You will exit the test! It cannot It cannot It cannot It cannot It cannot It cannot It cannot It cannot It cannot It cannot It cannot It cannot It cannot It cannot It cannot It cannot It cannot It cannot It cannot </p>
+	  <p>weafoawjofgaier</p>
 	</div>
 	<div id="notifyButtonsWrapper">
-	  <a class="notifyButtons">OK</a>
-	  <a class="notifyButtons">Cancel</a>
+	  <a class="notifyButtons">OK</a><a class="notifyButtons">Cancel</a>
 	</div>
       </div>
     </div>
   </div>
-  <script type="text/javascript" src="data/reading.js"></script>
-  <script type="text/javascript" src="html/reading.js"></script>
-  <script type="text/javascript" src="html/script.js"></script>
+</div>
+<script type="text/javascript" src="data/reading.js"></script>
+<script type="text/javascript" src="html/reading.js"></script>
+<script type="text/javascript" src="html/script.js"></script>
 </body>
 </html>
 

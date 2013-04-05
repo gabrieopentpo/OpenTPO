@@ -6,6 +6,10 @@ All lefts reserved.
 /*************************
 Set page width and height.
 **************************/
+* {
+    margin: 0;
+    padding: 0;
+}
 html, body{
     width: 1024px;
     /*width: 100%;*/
@@ -14,13 +18,29 @@ html, body{
     padding: 0;
     background: #f1e7ca;
 }
+#pagewrapper{ /*disable selection*/
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -khtml-user-select: none;
+    user-select: none;
+}
+#pagewrapper{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1024px;
+    margin: 0 auto;
+}
 
 #header{
     width: 1024px;
     background: #365884; /* for non-css3 browsers */
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#365884', endColorstr='#7e3139'); /* for IE */
-    background: -webkit-gradient(linear, left top, right top, from(#365884), to(#7e3139)); /* for webkit browsers */
-     background: -moz-linear-gradient(left,  #365884,  #7e3139); /* for firefox 3.6+ */
+    background: -webkit-gradient(linear, left top, right top, from(#365884), to(#7e3139));
+    background: -moz-linear-gradient(left, #365884, #7e3139);
+    background: -ms-linear-gradient(left, #365884, #7e3139);
+    background: -o-linear-gradient(left, #365884, #7e3139);
+    background: linear-gradient(to right, #365884, #7e3139);
     margin: 0 auto;
     padding: 0;
     position: absolute;
@@ -31,18 +51,17 @@ html, body{
 }
 
 .wrapper{
-    width: 1024px;
     position: absolute;
     overflow: hidden;
     top: 82px;
     bottom: 0;
-    margin: 0 auto;
+    left: 0;
+    right: 0;
 }
 
 /*The text in the top-left corner.*/
 #pageTag{
     position: absolute;
-    top: -15px;
     left: 5px;
     font-family: Verdana, Arial, sans-serif;
     font-weight: bold;
@@ -53,36 +72,49 @@ html, body{
 /**********************
 Notification Popup
 ***********************/
+#notifySystem{
+    display: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
 #dimmer{
     position: absolute;
     top: 0;
     left: 0;
-    right: 0;
     bottom: 0;
-    opacity: 0.5;
+    right: 0;
+    opacity: 0.3;
     background: #c0c0c0;
 }
-#notifyWrap{
+#notifyWrapper{
     position: absolute;
     left: 50%;
     top: 35%;
+    bottom: 0;
 }
 #notification{
-    float: left;
     position: relative;
     left: -50%;
-    background: #dfd;
     -moz-box-shadow: 0 0 20px #333333;
     -webkit-box-shadow: 0 0 20px #333333;
     box-shadow: 0 0 20px #333333;
-    border-radius: 2px;
-    padding: 0;
-    padding-bottom: 1em;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    padding-bottom: 0.6em;
 }
+
 #notificationHeader{
-    background: #008000;
+    left: 0;
+    right: 0;
+    height: 20px;
     padding: 0.11em 1em;
     margin: 0;
+    -moz-border-radius: 2px 2px 0 0;
+    -webkit-border-radius: 2px 2px 0 0;
     border-radius: 2px 2px 0 0;
 }
 #notificationHeader p{
@@ -93,29 +125,40 @@ Notification Popup
 }
 #notificationContent{
     margin: 0;
-    padding: 1em 2em;
+    padding: 1.5em 2em;
     font-family: Arial, sans-serif;
 }
 #notifyButtonsWrapper{
-    margin: 0;
-    position: relative;
-    left: 50%;
+    margin: 0 1.25em;
+    text-align: center;
 }
 .notifyButtons{
+    position: relative;
     width: 4em;
     display: inline-block;
     text-align: center;
-    position: relative;
-    left: -50%;
     border: 1px solid black;
     font-size: 14px;
     font-family: Arial, sans-serif;
     color: #000;
     text-decoration: none;
     background: #e9e9e9;
-    padding: 0.5em;
-    margin: 0 1.25em;
+    padding: 0.2em 0.6em;
+    margin: 0.25em 1em;
     outline: none;
+}
+#notifyClose{
+    display: block;
+    float: right;
+    width: 16px;
+    height: 16px;
+    background: url("buttons/glossaryClose.png");
+    position: absolute;
+    right: 4px;
+    top: 3px;
+}
+#notifyClose:active{
+    background: url("buttons/glossaryClose-active.png");
 }
 .notifyButtons:hover{
     background: #fff;
@@ -207,9 +250,9 @@ h2{
 }
 #questionNumber{
     position: absolute;
-    height: 4px;
+    height: 1em;
+    bottom: 3px;
     width: 100%;
-    bottom: 0;
     color: #fff;
     text-align: center;
     font-weight: bold;
@@ -218,9 +261,9 @@ h2{
 }
 #timer{
     position: absolute;
-    height: 4px;
+    height: 1em;
+    bottom: 3px;
     width: 100%;
-    bottom: 0;
     right: 0;
     color: #fff;
     text-align: right;
@@ -251,6 +294,13 @@ li a{
 }
 li a:link, li a:visited, li a:focus, li a:hover, li a:active{
     outline: none;
+}
+.directions{
+    font-size: 24px;
+    margin-bottom: 1.5em;
+}
+.directions ~ p, #readingHaveTime p{
+    margin: 1em 0;
 }
 
 /*************************************
@@ -473,9 +523,12 @@ Reading
 #readingQ, #readingQIns{
     margin-right: 2.5em;
 }
+#readingQ p, #readingQIns p{
+    margin-top: 1.2em;
+}
 #readingQ ul{
     position: relative;
-    left: -30px;
+    margin-top: 1em;
 }
 /*Beginning, More, or End*/
 #readingStatusBar{
@@ -503,7 +556,7 @@ Reading
     left: 0;
     right: 0;
     bottom: 0;
-    padding: 0 4em;
+    padding: 1em 4em;
     overflow: auto;
 }
 .rArrow{
@@ -526,7 +579,7 @@ Reading
 }
 #readingEnd{
     display: block;
- height: 90%;
+    height: 90%;
 }
 #readingQSumSixHead{
     font-weight: bold;
@@ -534,41 +587,49 @@ Reading
     margin: 0 auto;
 }
 #readingQSumSix h1{
-    margin-top: 0.5em;
+    margin: 0.5em auto;
 }
 #readingQSumSixAns{
     width: 60%;
     margin: 0 auto;
     margin-top: 1em;
+    padding: 1em 2em;
+    outline: 1px solid black;
 }
 #readingQSumSixAns li{
+    display: block;
     list-style-type: disc;
     height: 3.5em;
 }
 #readingQSumSixChoices{
-    width: 95%;
+    width: 100%;
     height: 13em;
     margin: 0 auto;
-    position: relative;
+    margin-top: 1em;
 }
-#readingQSumSixChoices > ul{
-    width: 45%;
-    list-style-type: none;
-}
-#readingQSumSixChoices > ul > li{
+#readingQSumSixChoices li{
+    display: block;
     height: 4em;
     overflow: hidden;
 }
-#readingQSumSixChoicesL{
-    position: absolute;
-    left: 0;
-    top: 0;
+#readingQSumSixChoices > ul{
+    width: 45%;
+    margin: 0 0 0 4%;
+    list-style-type: none;
 }
-#readingQSumSixChoicesR{
-    position: absolute;
-    right: 0;
-    top: 0;
+#readingQSumSixChoices > ul:first-of-type{
+    float: left;
 }
+#readingQSumSixChoices > ul:nth-of-type(2){
+    float: right;
+}
+/*
+#readingQSumSixChoices > li:nth-of-type(1), #readingQSumSixChoices > li:nth-of-type(2), #readingQSumSixChoices > li:nth-of-type(3){
+    width: 45%;
+}
+#readingQSumSixChoices > li:nth-of-type(4), #readingQSumSixChoices > li:nth-of-type(5), #readingQSumSixChoices > li:nth-of-type(6){
+    width: 45%;
+}*/
 /********************
 Reading Glossary
 *********************/
@@ -761,6 +822,9 @@ review chart
 .reviewTableIncorrect{
     background: #f99;
 }
-.reviewTableSelected{
+#reviewTableSelected{
     background: #44f;
+}
+.correctChoice{
+    background: #9f9;
 }
