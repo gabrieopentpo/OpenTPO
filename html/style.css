@@ -152,13 +152,13 @@ Notification Popup
     float: right;
     width: 16px;
     height: 16px;
-    background: url("buttons/glossaryClose.png");
+    background: url("images/meta.png") no-repeat -885px 0;
     position: absolute;
     right: 4px;
     top: 3px;
 }
 #notifyClose:active{
-    background: url("buttons/glossaryClose-active.png");
+    background: url("images/meta.png") no-repeat -901px 0;
 }
 .notifyButtons:hover{
     background: #fff;
@@ -227,23 +227,45 @@ h2{
     font-family: Arial, sans-serif;
     font-size: 16px;
 }
-.ovalSelected{
-    background: url("images/ovalSelected.png") no-repeat 0 0.2em;
+.ovalSelected span{
+    position: absolute;
+    left: 0;
+    top: 1px;
+    width: 22px;
+    height: 15px;
+    background: url("images/meta.png") no-repeat -1008px -13px;
 }
-.ovalNotSelected{
-    background: url("images/oval.png") no-repeat 0 0.2em;
+.ovalNotSelected span{
+    position: absolute;
+    left: 0;
+    top: 1px;
+    width: 22px;
+    height: 15px;
+    background: url("images/meta.png") no-repeat -1008px -28px;
 }
 .ovalSelected, .ovalNotSelected{
     padding: 0 0 10px 32px;
+    position: relative;
 }
-.squareSelected{
-    background: url("images/squareSelected.png") no-repeat 0 0.1em;
+.squareSelected span{
+    position: absolute;
+    left: 2px;
+    top: 1px;
+    width: 15px;
+    height: 15px;
+    background: url("images/meta.png") no-repeat -900px -16px;
 }
-.squareNotSelected{
-    background: url("images/square.png") no-repeat 0 0.1em;
+.squareNotSelected span{
+    position: absolute;
+    left: 2px;
+    top: 1px;
+    width: 15px;
+    height: 15px;
+    background: url("images/meta.png") no-repeat -885px -16px;
 }
 .squareSelected, .squareNotSelected{
     padding: 0 0 10px 32px;
+    position: relative;
 }
 .arrowIndicator{
     margin-top: 2em;
@@ -322,11 +344,11 @@ The following are settings of buttons.
     display: block;
     float: right;
     width: 74px;
-    height: 39px;
+    height: 34px;
     margin-right: 8px;
     position: relative;
     right: 0px;
-    top: 1px;
+    top: 3.5px;
 }
 /*and there are still a couple of buttons at the size 84*34. Take them into consideration. */
 .specialSquareButtonsRight{
@@ -346,128 +368,157 @@ The following are settings of buttons.
 
 }
 /*Images of all buttons*/
-#nextButton{
-    background: url("buttons/next.png") no-repeat 50% 50%;
-}
-#nextButton:hover{
-    background: url("buttons/next-hover.png") no-repeat 50% 50%;
-}
 #backButton{
-    background: url("buttons/back.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat -826px 0;
 }
 #backButton:hover{
-    background: url("buttons/back-hover.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat -708px 0;
 }
 #helpButton{
-    background: url("buttons/help.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat -531px 0;
 }
 #helpButton:hover{
-    background: url("buttons/help-hover.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat -472px 0;
 }
 #reviewButton{
-    background: url("buttons/review.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat -236px 0;
 }
 #reviewButton:hover{
-    background: url("buttons/review-hover.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat -118px 0;
 }
 #continueCircleButton{
-    background: url("buttons/continueCircle.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat -649px 0;
 }
 #continueCircleButton:hover{
-    background: url("buttons/continueCircle-hover.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat -590px 0;
 }
 #continueButton{
-    background: url("buttons/continue.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat -938px -73px;
 }
 #continueButton:hover{
-    background: url("buttons/continue-hover.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat -864px -73px;
 }
 #reviewSquareButton{
-    background: url("buttons/reviewSquare.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat -494px -73px;
 }
 #reviewSquareButton:hover{
-    background: url("buttons/reviewSquare-hover.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat -420px -73px;
 }
 #returnButton{
-    background: url("buttons/return.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat -642px -73px;
 }
 #returnButton:hover{
-    background: url("buttons/return-hover.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat -568px -73px;
 }
 #gotoQuestionButton{
-    background: url("buttons/gotoQuestion.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat -790px -73px;
 }
 #gotoQuestionButton:hover{
-    background: url("buttons/gotoQuestion-hover.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat -716px -73px;
 }
 #viewTextButton{
-    background: url("buttons/viewText.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat -84px -39px;
 }
 #viewTextButton:hover{
-    background: url("buttons/viewText-hover.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat 0 -39px;
 }
 #viewQuestionButton{
-    background: url("buttons/viewQuestion.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat -252px -39px;
 }
 #viewQuestionButton:hover{
-    background: url("buttons/viewQuestion-hover.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat -168px -39px;
 }
 #nextButton{
-    background: url("buttons/next.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat -413px 0;
 }
 #nextButton:hover{
-    background: url("buttons/next-hover.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat -295px 0;
 }
 #volumeButton{
-    background: url("buttons/volume.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat -59px 0;
 }
 #volumeButton:hover{
-    background: url("buttons/volume-hover.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat 0 0;
 }
 #sectionExitButton{
-    background: url("buttons/sectionExit.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat -756px -39px;
 }
 #sectionExitButton:hover{
-    background: url("buttons/sectionExit-hover.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat -672px -39px;
 }
 #pauseTestButton{
-    background: url("buttons/pauseTest.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat -168px -73px;
 }
 #pauseTestButton:hover{
-    background: url("buttons/pauseTest-hover.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat -84px -73px;
+}
+#resumeTestButton{
+    background: url("images/meta.png") no-repeat 0 -73px;
+}
+#resumeTestButton:hover{
+    background: url("images/meta.png") no-repeat -840px -39px;
 }
 #showSolutionButton{
-    background: url("buttons/showSolution.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat -588px -39px;
 }
 #showSolutionButton:hover{
-    background: url("buttons/showSolution-hover.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat -504px -39px;
 }
 #hideSolutionButton{
-    background: url("buttons/hideSolution.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat -336px -73px;
 }
 #hideSolutionButton:hover{
-    background: url("buttons/hideSolution-hover.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat -252px -73px;
 }
 #nextButtonGrey{
-    background: url("buttons/next-grey.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat -354px 0;
 }
 #backButtonGrey{
-    background: url("buttons/back-grey.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat -767px 0;
 }
 #reviewButtonGrey{
-    background: url("buttons/review-grey.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat -177px 0;
 }
 #testExitButton{
-    background: url("buttons/testExit.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat -420px -39px;
 }
 #testExitButton:hover{
-    background: url("buttons/testExit-hover.png") no-repeat 50% 50%;
+    background: url("images/meta.png") no-repeat -336px -39px;
+}
+#showTimeButton{
+    background: url("images/meta.png") no-repeat -924px -16px;
+}
+#showTimeButton:hover{
+    background: url("images/meta.png") no-repeat -924px 0;
+}
+#hideTimeButton{
+    background: url("images/meta.png") no-repeat -924px -48px;
+}
+#hideTimeButton:hover{
+    background: url("images/meta.png") no-repeat -924px -32px;
+}
+#showTimeButton, #hideTimeButton{
+    display: block;
+    float: right;
+    position: absolute;
+    width: 84px;
+    height: 16px;
+    right: 120px;
+    bottom: 3px;
+}
+#showTimeButton:active, #hideTimeButton:active{
+    right: 122px;
+    bottom: 1px;
 }
 
 /*When buttons are pressed down, let's shift them a bit.*/
-.circleButtonsRight:active, .squareButtonsRight:active, .specialSquareButtonsRight:active{
+.circleButtonsRight:active{
     right: 2px;
     top: 3px;
+}
+.squareButtonsRight:active, .specialSquareButtonsRight:active{
+     right: 2px;
+     top: 5.5px;
 }
 .buttonsLeft:active{
     left: -2px;
@@ -563,7 +614,7 @@ Reading
     display: inline-block;
     width: 19px;
     height: 13px;
-    background: url("images/readingArrow.png");
+    background: url("images/meta.png") no-repeat -1008px 0;
     position: absolute;
     top: 3px;
     left: 1px;
@@ -572,7 +623,7 @@ Reading
     display: inline-block;
     width: 19px;
     height: 13px;
-    background: url("images/readingArrow.png");
+    background: url("images/meta.png") no-repeat -1008px 0;
     position: relative;
     left: 1px;
     top: 1px;
@@ -637,9 +688,10 @@ Reading Glossary
     width: 40%;
     height: auto;
     position: absolute;
-    left: 20px;
-    bottom: 20px;
+    left: 5%;
+    bottom: 30px;
     border: 1px solid black;
+    padding: 0;
 }
 #readingGlossaryTitle{
     display: block;
@@ -661,13 +713,13 @@ Reading Glossary
     float: right;
     width: 16px;
     height: 16px;
-    background: url("buttons/glossaryClose.png");
+    background: url("images/meta.png") no-repeat -885px 0;
     position: absolute;
     right: 1px;
     top: 1px;
 }
 #glossaryClose:active{
-    background: url("buttons/glossaryClose-active.png");
+    background: url("images/meta.png") no-repeat -901px 0;
 }
 
 /***************
@@ -747,15 +799,43 @@ Init code
 #header > a{
     display:none;
 }
-#reviewChart > div{
-    overflow: auto;
-}
-#reviewChartReading{
+#reviewChart{
     position: absolute;
+    overflow: hidden;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
+}
+#reviewChart h1{
+    font-size: 16px;
+    margin: 0.5em;
+}
+#reviewReading{
+    position: absolute;
+    top: 2em;
+    bottom: 2em;
+    left: 2em;
+    width: 40%;
+}
+#reviewChartReading{
+    position: absolute;
+    top: 3em;
+    bottom: 2em;
+    width: 100%;
+    overflow: auto;
+}
+#reviewChartReading table{
+    width: 100%;
+}
+#reviewChartReading th:first-of-type, reviewChartReading th:nth-of-type(3n + 1){
+    width: 10%;
+}
+#reviewChartReading th:nth-of-type(2), reviewChartReading th:nth-of-type(3n + 2){
+    width: 40%;
+}
+#reviewChartReading th:nth-of-type(3), reviewChartReading th:nth-of-type(3n){
+    width: 50%;
 }
 
 /************
@@ -764,15 +844,17 @@ about reading passage control
 span > .rArrow{
     display: none;
 }
-.rIns, .rIns + strong{
+.rIns0, .rIns1, .rIns2, .rIns3, .rIns0 + strong, .rIns1 + strong, .rIns2 + strong, .rIns3 + strong{
     display: none;
 }
-a.rIns{
+a.rIns0, a.rIns1, a.rIns2, a.rIns3{
+    /*display: inline-block;*/
+/*set in js*/ 
     position: relative;
-    top: 0.1em;
+    top: 0.05em;
     margin: 0 0.12em;
-    height: 1em;
-    width: 0.9em;
+    height: 0.85em;
+    width: 0.78em;
     background: black;
 }
 #readingQ .rMark{
@@ -808,9 +890,6 @@ review chart
 }
 #reviewChart th{
     background: #ccc;
-}
-#reviewChart tr > th:nth-of-type(2), #reviewChart tr > th:nth-of-type(3){
-    padding-left: 2em;
     text-align: right;
 }
 #reviewChart td{
@@ -823,7 +902,7 @@ review chart
     background: #f99;
 }
 #reviewTableSelected{
-    background: #44f;
+    background: #99f;
 }
 .correctChoice{
     background: #9f9;

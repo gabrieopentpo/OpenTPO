@@ -12,32 +12,32 @@ All lefts reserved.
 <div id="pagewrapper">
   <div id="header">
     <p id="pageTag">opentpo-0.2_alpha</p>
+    <p id="questionNumber"></p>
+    <p id="timer"><span id="hours"></span> : <span id="minutes"></span> : <span id="seconds"></span></p>
+    <a id="showTimeButton"></a>
+    <a id="hideTimeButton"></a>
+    <a class="squareButtonsRight" id="gotoQuestionButton"></a>
     <a class="circleButtonsRight" id="nextButton"></a>
-    <a class="circleButtonsRight" id="backButton"></a>
     <a class="circleButtonsRightGrey" id="nextButtonGrey"></a>
+    <a class="circleButtonsRight" id="backButton"></a>
     <a class="circleButtonsRightGrey" id="backButtonGrey"></a>
     <a class="circleButtonsRight" id="helpButton"></a>
     <a class="circleButtonsRight" id="reviewButton"></a>
     <a class="circleButtonsRightGrey" id="reviewButtonGrey"></a>
+    <a class="specialSquareButtonsRight" id="viewTextButton"></a>
+    <a class="specialSquareButtonsRight" id="viewQuestionButton"></a>
 <!-- VOLUME button at the right side of CONTINUE button, but at the left side of OK button. -->
     <a class="circleButtonsRight" id="volumeButton"></a>
     <a class="circleButtonsRight" id="continueCircleButton"></a>
     <a class="squareButtonsRight" id="continueButton"></a>
     <a class="squareButtonsRight" id="reviewSquareButton"></a>
-    <a class="squareButtonsRight" id="gotoQuestionButton"></a>
     <a class="squareButtonsRight" id="returnButton"></a>
-    <a class="specialSquareButtonsRight" id="viewTextButton"></a>
-    <a class="specialSquareButtonsRight" id="viewQuestionButton"></a>
     <a class="buttonsLeft" id="testExitButton"></a>
     <a class="buttonsLeft" id="sectionExitButton"></a>
     <a class="buttonsLeft" id="pauseTestButton"></a>
     <a class="buttonsLeft" id="resumeTestButton"></a>
     <a class="buttonsLeft" id="showSolutionButton"></a>
     <a class="buttonsLeft" id="hideSolutionButton"></a>
-    <p id="questionNumber"></p>
-    <a id="showTimeButton"></a>
-    <a id="hideTimeButton"></a>
-    <p id="timer"><span id="hours"></span> : <span id="minutes"></span> : <span id="seconds"></span></p>
   </div>
   <div class="wrapper">
 <!--
@@ -106,14 +106,17 @@ Each div refers to one certain page or frame. Use CSS or Javascript to show or h
     </div>
 <!--review mode-->
     <div id="reviewChart">
-      <div id="reviewChartReading">
-	<table>
-	  <tr>
-	    <th>#</th>
-	    <th>My answer</th>
-	    <th>Correct answer</th>
-	  </tr>
-	</table>
+      <div id="reviewReading">
+	<h1>Reading section</h1>
+	<div id="reviewChartReading">
+	  <table>
+	    <tr>
+	      <th>#</th>
+	      <th>My answer</th>
+	      <th>Correct answer</th>
+	    </tr>
+	  </table>
+	</div>
       </div>
     </div>
 <!--begin test-->
@@ -224,7 +227,6 @@ Each div refers to one certain page or frame. Use CSS or Javascript to show or h
   </div>
 </div>
 <script type="text/javascript" src="data/reading.js"></script>
-<script type="text/javascript" src="html/reading.js"></script>
 <script type="text/javascript" src="html/script.js"></script>
 </body>
 </html>

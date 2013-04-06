@@ -1,51 +1,4 @@
 //include functions
-/* Event handling from Dean Edwards: http://dean.edwards.name/weblog/2005/10/add-event/*/
-
-function addEvent(element, type, handler) {
-  // assign each event handler a unique ID
-  if (!handler.$$guid) handler.$$guid = addEvent.guid++;
-  // create a hash table of event types for the element
-  if (!element.events) element.events = {};
-  // create a hash table of event handlers for each element/event pair
-  var handlers = element.events[type];
-  if (!handlers) {
-    handlers = element.events[type] = {};
-    // store the existing event handler (if there is one)
-    if (element["on" + type]) {
-      handlers[0] = element["on" + type];
-    }
-  }
-  // store the event handler in the hash table
-  handlers[handler.$$guid] = handler;
-  // assign a global event handler to do all the work
-  element["on" + type] = handleEvent;
-};
-// a counter used to create unique IDs
-addEvent.guid = 1;
-
-function removeEvent(element, type, handler) {
-  // delete the event handler from the hash table
-  if (element.events && element.events[type]) {
-    delete element.events[type][handler.$$guid];
-  }
-};
-
-function handleEvent(event) {
-  // grab the event object (IE uses a global event object)
-  event = event || window.event;
-  // get a reference to the hash table of event handlers
-  var handlers = this.events[event.type];
-  // execute each event handler
-  for (var i in handlers) {
-    this.$$handleEvent = handlers[i];
-    this.$$handleEvent(event);
-  }
-};
-
-
-
-
-
 function __deleteNode(node){
     if (node != null){
 	var parent = node.parentNode;
@@ -94,20 +47,6 @@ function __appendNode(parent, tagname){
     parent.appendChild(newnode);
     return newnode;
 }
-function __getNthChild(parent, n, tagname){
-    if (parent == null) return false;
-    var arr = parent.childNodes;
-    var count = 0;
-    for (var i = 0; i < arr.length; i++){
-	if (arr[i].nodeName.toLowerCase() === tagname.toLowerCase()){
-	    count++;
-	}
-	if (count === n){
-	    return arr[i];
-	}
-    }
-    return false;
-}
 function __addStyleSheet(Id, str){
     var sheet = document.createElement('style');
     sheet.innerHTML = str;
@@ -128,8 +67,19 @@ var _reading = function(){
     var seen = new Array();
     var last = new Array();
     var q = new Array();
+    var glossary = {};//word:desc
     var maxseen;
     return {
+	addGlossary : function(word, desc){
+	    glossary[word] = desc;
+	},
+	getGlossary : function(word){
+	    if (glossary[word]){
+		return glossary[word];
+	    }else{
+		return '';
+	    }
+	},
 	updateMaxSeen : function(thisq){
 	    maxseen = (thisq > maxseen) ? thisq : maxseen;
 	},
@@ -141,6 +91,7 @@ var _reading = function(){
 	    seen = [];
 	    q = [];
 	    maxseen = 0;
+	    glossary = {};
 	},
 	addText : function(str){
 	    text[text.length] = str;
@@ -161,6 +112,7 @@ var _reading = function(){
 	    return q.length;
 	},
 	correspondTextNum : function(qnum){
+	    if (qnum === -1) return -1;//for boundary situations
 	    var i = 0;
 	    while (qnum >= last[i]){
 		i++;
@@ -192,7 +144,8 @@ var generalTimer = function(){
     var showing = false;
     var outoftime = '';
     var controller;
-    function updateReadableTimer(thetime){
+    function updateReadableTimer(timeArg){
+	var thetime = parseInt(timeArg / 10);
 	var hourN = thetime / 3600;
 	var minuteN = (thetime % 3600) / 60;
 	var secondN = thetime % 60;
@@ -205,25 +158,38 @@ var generalTimer = function(){
     }
     function countWorker(){
 	if (timeremain <= 0) return;
+	if (!counting) return;
 	timeremain--;
-	updateReadableTimer(timeremain);
-	if (timeremain === 0){
-	    notify.show('blue', 'Time out', '<p>Time exceeds. Your answers have been saved.</p><p>Press <strong>Continue</strong> to leave this part.</p>', [['Continue', outoftime]], false);
-	    generalTimer.discard();
-	}else{
-	    controller = setTimeout(countWorker, 1000);
+	if (timeremain % 10 === 0){
+	    updateReadableTimer(timeremain);
+	    if (timeremain === 0){
+		notify.show('blue', 'Time out', '<p>Time exceeds. Your answers have been saved.</p><p>Press <strong>Continue</strong> to leave this part.</p>', [['Continue', outoftime]], false);
+		generalTimer.discard();
+	    }
+	}
+    }
+    function setStart(){
+	if (tpoMode === 1){
+	    __show('pauseTestButton');
+	    __id('pauseTestButton').onclick = function(){
+		generalTimer.stop();
+	    };
+	}
+	__hide('resumeTestButton');
+    }
+    function setStop(){
+	__hide('pauseTestButton');
+	__show('resumeTestButton');
+	if (tpoMode === 1){
+	    __id('resumeTestButton').onclick = function(){
+		generalTimer.start();
+	    };
 	}
     }
     return {
 	init : function(thetime, outoftimeproceed){
-	    if (counting){
-		this.stop();
-	    }
-	    if (showing){
-		this.hide();
-	    }
 	    outoftime = outoftimeproceed;
-	    timeremain = thetime;
+	    timeremain = thetime * 10;//100ms an interval
 	    updateReadableTimer(timeremain);
 	},
 	show : function(){
@@ -239,27 +205,14 @@ var generalTimer = function(){
 	    showing = false;
 	},
 	start : function(){
-	    if (counting) return;
+	    setStart();
 	    counting = true;
-	    if (tpoMode === 1){
-		__show('pauseTestButton');
-		__id('pauseTestButton').onclick = function(){
-		    generalTimer.stop();
-		};
-	    }
-	    __hide('resumeTestButton');
-	    controller = setTimeout(countWorker, 1000);
+	    controller = setInterval(countWorker, 100);
 	},
 	stop : function(){
-	    if (tpoMode !== 1) return;
-	    if (!counting) return;
+	    setStop();
 	    counting = false;
-	    __hide('pauseTestButton');
-	    __show('resumeTestButton');
-	    __id('resumeTestButton').onclick = function(){
-		generalTimer.start();
-	    };
-	    clearTimeout(controller);
+	    clearInterval(controller);
 	},
 	resumeAppear : function(){
 	    if (showing){
@@ -267,14 +220,10 @@ var generalTimer = function(){
 	    }else{
 		this.hide();
 	    }
-	    if (tpoMode === 1){
-		if (counting && tpoMode === 1){
-		    __show('pauseTestButton');
-		    __hide('resumeTestButton');
-		}else{
-		    __hide('pauseTestButton');
-		    __show('resumeTestButton');
-		}
+	    if (counting){
+		setStart();
+	    }else{
+		setStop();
 	    }
 	},
 	discard : function(){
@@ -380,8 +329,9 @@ var storage = function(){
 var testSet = 0;
 var allSets = 26;
 var tpoMode = 0; //test=0 practice=1 review=2
-var practiceHalt = 0; //reading 1~3 && -1: All reading/listening
 var nowSection = 0; //r=0 l=1 s=2 w=3
+var reviewed;
+var showGloss = '';//glossary
 //global variables end
 
 
@@ -409,6 +359,7 @@ for (var i = 1; i <= allSets; i++){
 		notify.show('blue', 'Select section', '<p>Which section of test set ' + testSet + ' would you like to take?</p><p>This version of openTPO includes only reading section. Please keep up with our update!</p>', [['Reading', '__hideAll();readingHub("directions");']], true);
 		break;
 	    case 2:
+		reviewed = 'n';//keep reviewed longer than empty string
 		__hideAll();
 		showReviewChart();
 		break;
@@ -422,6 +373,7 @@ for (var i = 1; i <= allSets; i++){
 }
 
 function resetSystem(){
+    generalTimer.discard();
     __hideAll();
     __show('welcomePage');
     __id('backButton').onclick = function(){
@@ -487,10 +439,25 @@ __id('testExitButton').onclick = function (){
     notify.show('yellow', 'Exit Test', '<p>Are you going to exit the test? Your progress has been saved automatically.</p>', [['Exit', 'clearThisSection();resetSystem();'], ['Cancel', '']], false);
 };
 __id('sectionExitButton').onclick = function (){
-    notify.show('yellow', 'Exit Section', '<p>Are you going to exit this section? Your progress has been saved automatically.</p>', [['Exit', 'exitThisSection();'], ['Cancel', '']], false);
+    if (tpoMode !== 2){
+	notify.show('yellow', 'Exit Section', '<p>Are you going to exit this section? Your progress has been saved automatically.</p>', [['Exit', 'exitThisSection();'], ['Cancel', '']], false);
+    }else{
+	__hideAll();
+	showReviewChart();
+    }
 };
 __id('resetStorage').onclick = function(){
     notify.show('red', 'DANGEROUS', '<p>This operation will reset your local storage. All of your answers will be lost. Are you sure?</p>', [['Commit', 'storage.reset();'], ['Cancel', '']], true);
+};
+__id('glossaryClose').onclick = function(){
+    __hide('readingGlossary');
+    showGloss = '';
+}
+__id('showTimeButton').onclick = function(){
+    generalTimer.show();
+};
+__id('hideTimeButton').onclick = function(){
+    generalTimer.hide();
 };
 
 resetSystem();
@@ -563,13 +530,13 @@ function readingPreprocess(originalarray){
 	    }
 	}
 	function ___arrow(){
-	    //>>2
-	    var block = temp.split('>>');
+	    //``2
+	    var block = temp.split('``');
 	    var paraCount = 0;
 	    temp = block[0];
 	    paraCount += block[0].split('<p>').length - 1;
 	    for (var i = 1; i < block.length; i++){
-		var num = parseInt(block[i]);
+		var num = parseInt(block[i], 10);
 		var len;
 		len = (num < 10) ? 1 : 2;
 		temp += '<span class="r' + (num + qstart).toString() + '"><span class="rArrow"></span></span>' + block[i].substring(len, block[i].length);
@@ -586,17 +553,50 @@ function readingPreprocess(originalarray){
 		var strIns = _reading.getQ(num + qstart).sentence + ' ';
 		var len;
 		len = (num < 10) ? 1 : 2;
-		temp += '<span class="r' + (num + qstart) + '"><a class="rIns" onclick="insClick(' + ((i - 1) % 4) + ', ' + (num + qstart) + ');"></a><strong>' + strIns + '</strong></span>' + block[i].substring(len, block[i].length);//insClick(0, 13)
+		temp += '<span class="r' + (num + qstart) + '"><a class="rIns' + ((i - 1) % 4) + '" onclick="insClick(' + ((i - 1) % 4) + ', ' + (num + qstart) + ');"></a><strong>' + strIns + '</strong></span>' + block[i].substring(len, block[i].length);//insClick(0, 13)
+	    }
+	}
+	function ___nouns(){
+	    //++  ++
+	    var block = temp.split('++');
+	    var nounFlag = false;
+	    temp = '';
+	    for (var i = 0; i < block.length; i++){
+		if (nounFlag === true){
+		    temp += '<em>' + block[i] + '</em>';
+		}
+		else{
+		    temp += block[i];
+		}
+		nounFlag = !nounFlag;
 	    }
 	}
 	function ___glossary(){
-	    
+	    // ***word---desc***
+	    var block = temp.split('***');
+	    var wordFlag = false;
+	    var tempb;
+	    var worditself;
+	    temp = '';
+	    for (var i = 0; i < block.length; i++){
+		if (wordFlag === true){
+		    tempb = block[i].split('---');
+		    worditself = tempb[0].toLowerCase();
+		    _reading.addGlossary(worditself, tempb[1]);
+		    temp += '<a href="javascript:" class="glossaryUnderlined" onclick="showGlossary(\'' + worditself + '\');">' + tempb[0] + '</a>';
+		}
+		else{
+		    temp += block[i];
+		}
+		wordFlag = !wordFlag;
+	    }
 	}
 	temp = original;
 	___paragraph();
 	___mark();
 	___arrow();
 	___insert(i);
+	___nouns();
 	___glossary();
 	return temp;
     }
@@ -678,12 +678,14 @@ function readingHub(status){
 		__show('readingSplitWindow');
 		__hide('viewTextButton');
 		__show('viewQuestionButton');
+		if (showGloss) showGlossary(showGloss);
 	    };
 	    __id('viewQuestionButton').onclick = function(){
 		__show('readingQSumSix');
 		__hide('readingSplitWindow');
 		__show('viewTextButton');
 		__hide('viewQuestionButton');
+		__hide('readingGlossary');
 	    };
 	    __hide('readingQ');
 	    __hide('readingQIns');
@@ -697,6 +699,7 @@ function readingHub(status){
 	    sumSix.update(qnum);
 	}
 	else if (theQ.type < 3){ //normal or multiple question
+	    if (showGloss) showGlossary(showGloss);
 	    __hide('readingQIns');
 	    __show('readingQ');
 	    var qNode = __id('readingQ');
@@ -719,6 +722,7 @@ function readingHub(status){
 
 	    for (i = 0; i <= 3; i++){
 		var liNode = __appendNode(choiceList, 'li');
+		__appendNode(liNode, 'span');
 		var aNode = __appendNode(liNode, 'a');
 		aNode.href = 'javascript:';
 		liNode.onclick = function(choiceClass, i, qnum){
@@ -763,6 +767,7 @@ function readingHub(status){
 	    }
 	}
 	else if (theQ.type === 4){
+	    if (showGloss) showGlossary(showGloss);
 	    __hide('readingQ');
 	    __show('readingQIns');
 	    var theNode = __id('toBeInserted');
@@ -778,18 +783,29 @@ function readingHub(status){
 	}
 	var sheetName = 'r' + qnum;
 	var strSS = '.' + sheetName;
-	var newsheet = strSS + ' .rArrow, ' + strSS + ' a.rIns {display: inline-block;} ' + strSS + ' .rMark {background: #c0c0c0 !important;}';
+	var newsheet = strSS + ' .rArrow {display: inline-block;} ' + strSS + ' .rMark {background: #c0c0c0 !important;}';
+	for (i = 0; i < 4; i++){
+	    newsheet += strSS + ' a.rIns0 {display: inline-block;} ' + strSS + ' a.rIns1 {display: inline-block;} ' + strSS + ' a.rIns2 {display: inline-block;} ' + strSS + ' a.rIns3 {display: inline-block;} '
+	}
 	__addStyleSheet(sheetName, newsheet);
     }
     
 
+
+    //here starts the main part of function
     __hideAll();
-    __show('testExitButton');
-    __show('sectionExitButton');
+    if (tpoMode !== 2){
+	__show('testExitButton');
+	__show('sectionExitButton');
+    }else{
+	__show('sectionExitButton');
+	__show('showSolutionButton');
+    }
     for (var i = 1; i <= _reading.totalQ(); i++){
 	__deleteId('r' + i.toString());
     }
     if (status === 'directions'){
+	showGloss = '';
 	__show('readingSectionDirections');
 	__show('nextButtonGrey');
 	__show('backButtonGrey');
@@ -804,7 +820,7 @@ function readingHub(status){
 	};
 	return;
     }
-    generalTimer.resumeAppear();
+    if (tpoMode !== 2) generalTimer.resumeAppear();
     if (status === 'haveTime'){
 	__hide('testExitButton');
 	__hide('sectionExitButton');
@@ -853,20 +869,29 @@ function readingHub(status){
 	questionNow = status;
 	var readingNumber = _reading.correspondTextNum(status);
 	thisSeen = _reading.hasSeen(readingNumber);
-//alert(status.toString() + ' ' + readingNumber.toString());
 	updatePassage(readingNumber);
-	if (!thisSeen && tpoMode !== 2){//not review mode
-	    __deleteAllChild(__id('readingQ'));
-	    __show('continueCircleButton');
-	    __show('testExitButton');
-	    __show('sectionExitButton');
-	    __id('continueCircleButton').onclick = function(){
-		_reading.setSeen(readingNumber);
-		readingHub(status);
+	if (_reading.correspondTextNum(status) !== _reading.correspondTextNum(status - 1)){
+	    if (status > 0){
+		showGloss = ''; //for glossary autohide
 	    }
-	    return;
+	    if (!thisSeen && tpoMode !== 2){//not review mode
+		__deleteAllChild(__id('readingQ'));
+		__show('continueCircleButton');
+		__show('testExitButton');
+		__show('sectionExitButton');
+		__id('continueCircleButton').onclick = function(){
+		    _reading.setSeen(readingNumber);
+		    readingHub(status);
+		}
+		return;
+	    }
 	}
-	__show('nextButton');
+
+	if (status + 1 === _reading.totalQ() && tpoMode === 2){
+	    __show('nextButtonGrey');
+	}else{
+	    __show('nextButton');
+	}
 	if (status === 0){
 	    __show('backButtonGrey');
 	}else{
@@ -880,6 +905,7 @@ function readingHub(status){
 	__id('backButton').onclick = function(){
 	    readingHub(status - 1);
 	};
+
 	__id('nextButton').onclick = function(){
 	    if (status + 1 === _reading.totalQ()){
 		readingHub('haveTime');
@@ -896,8 +922,8 @@ var readingSectionEnd = function(){
     resetSystem();
 }
 var clearReadingSection = function(){
-    __hideAll();
     generalTimer.discard();
+    __hideAll();
 }
 var exitThisSection = function(){
     switch(nowSection){
@@ -945,10 +971,10 @@ function insUpdate(index, qnum){
     var newStyle = '';
     var strSS = '.r' + qnum;
     if (index >= 0){//-1 is reserved for review mode
-	newStyle = strSS + ':nth-of-type(' + (index + 1).toString() + ') a.rIns {display: none !important;}' + strSS + ':nth-of-type(' + (index + 1).toString() + ') a.rIns + strong {display: inline !important;}';
+	newStyle = strSS + ' a.rIns' + index.toString() + ' {display: none !important;}' + strSS + ' a.rIns' + index.toString() + ' + strong {display: inline !important;}';
     }
     if (tpoMode === 2){
-	newStyle += strSS + ':nth-of-type(' + (correct).toString() + ') a.rIns {display: none !important;}' + strSS + ':nth-of-type(' + (correct).toString() + ') a.rIns + strong {display: inline !important; background: #9f9 !important;}';
+	newStyle += strSS + ' a.rIns' + (correct - 1).toString() + ' {display: none !important;}' + strSS + ' a.rIns' + (correct - 1).toString() + ' + strong {display: inline !important; background: #9f9 !important;}';
     }
     __addStyleSheet('insStyle', newStyle);
 }
@@ -1038,21 +1064,47 @@ var sumSix = function(){
 	}
     }
 }();
+var showGlossary = function(word){
+    var desc = _reading.getGlossary(word);
+    if (desc === '') return;
+    __id('readingGlossaryContents').innerHTML = '<strong>' + word + '</strong>: ' + desc;
+    __show('readingGlossary');
+    showGloss = word;
+}
 
 
 // review mode
 function showReviewChart(){
-    __id('backButton').onclick = function(){
+    __id('returnButton').onclick = function(){
 	resetSystem();
 	__hideAll();
 	__show('setSelectPage');
 	__show('backButton');
     }
-    __show('backButton');
-    __show('gotoQuestionButton');
+    __show('returnButton');
     __id('gotoQuestionButton').onclick = voidFunction;
     __show('reviewChart');
-    generateReviewReadingChart();
+    __id('questionNumber').innerHTML = 'Review TPO ' + parseInt(testSet / 10).toString() + testSet.toString();
+    __show('questionNumber');
+    var r = -1;
+    var l = -1;
+    var s = -1;
+    var w = -1;
+    var temp = reviewed.charAt(0);
+    switch(temp){
+    case 'r':
+	r = parseInt(reviewed.slice(1), 10);
+	break;
+    case 'l':
+	break;
+    case 's':
+	break;
+    case 'w':
+	break;
+    default:
+	break;
+    }
+    generateReviewReadingChart(r);
 }
 
 var reviewGoto = function(mode, qnum){
@@ -1062,7 +1114,7 @@ var reviewGoto = function(mode, qnum){
     }
 }
 
-function generateReviewReadingChart(){
+function generateReviewReadingChart(rArg){
     __deleteAllChild(__id('reviewChartReading'));
     var tableNode = __appendNode(__id('reviewChartReading'), 'table');
     var trNode = __appendNode(tableNode, 'tr');
@@ -1111,8 +1163,14 @@ function generateReviewReadingChart(){
 	else{
 	    trNode.className = 'reviewTableIncorrect';
 	}
+	if (rArg === i){
+	    trNode.id = 'reviewTableSelected';
+	    __show('gotoQuestionButton');
+	}
 	trNode.onclick = function(i){
 	    return function(){
+		reviewed = 'r' + i.toString();
+		__show('gotoQuestionButton');
 		if (__id('reviewTableSelected') !== null){
 		    __id('reviewTableSelected').id = '';
 		}
