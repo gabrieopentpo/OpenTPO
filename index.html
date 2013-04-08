@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <!-- 
-This is opentpo-0.1.0.0 at alpha stage.
+This is opentpo-0.2.0.0 at alpha stage.
 All lefts reserved.
 -->
 <html>
 <head>
-  <title>opentpo-0.2_alpha</title>
+  <title>opentpo-0.2.0.0 alpha</title>
   <link rel="stylesheet" type="text/css" href="html/style.css" />
 </head>
 <body  onselectstart="return false">
+<div id="topbar">
+</div>
 <div id="pagewrapper">
   <div id="header">
-    <p id="pageTag">opentpo-0.2_alpha</p>
+    <p id="pageTag">opentpo-0.2.0.0 alpha</p>
     <p id="questionNumber"></p>
     <p id="timer"><span id="hours"></span> : <span id="minutes"></span> : <span id="seconds"></span></p>
     <a id="showTimeButton"></a>
@@ -50,14 +52,23 @@ Each div refers to one certain page or frame. Use CSS or Javascript to show or h
 	<a href="javascript:" class="whiteButtons" id="practiceModeButton">Practice mode</a>
 	<a href="javascript:" class="whiteButtons" id="reviewModeButton">Review mode</a>
       </div>
-      <p><a href="javascript:" id="settingsLink">Settings</a></p>
-      <p><a href="javascript:" id="helpLink">Help</a></p>
-      <p><a href="javascript:" id="aboutLink">About</a></p>
-      <p><a href="javascript:" id="acknowledgeLink">Acknowledgements</a></p>
-      <p><a href="javascript:" id="contributeLink">Contribute to this project!</a></p>
+      <p><button id="settingsLink">Settings</button></p>
+      <p><button id="helpLink">Help</button></p>
+      <p><button id="aboutLink">About</button></p>
+      <p><a href="http://opentpo.github.io" target="__blank">Project homepage</a></p>
+      <p><a href="https://github.com/opentpo/openTPO" target="__blank">Fork on Github!</a></p>
     </div>
     <div id="settingsPage">
-      <p><a href="javascript:" id="resetStorage">Reset Storage</a></p>
+      <p><button id="resetStorage">Reset Storage</button></p>
+      <p>Clear saved answers of <button id="resetReading">Reading</button><button id="resetListening">Listening</button><button id="resetWriting1">Integrated writing</button><button id="resetWriting2">Independent writing</button> in set <input id="resetInput" type="number" min="1" max="26"></input></p>
+      <p><button id="importStorage">Import answers</button><button id="exportStorage">Export answers</button></p>
+    </div>
+    <div id="importStoragePage">
+      <textarea id="importContent"></textarea>
+    </div>
+    <div id="exportStoragePage">
+      <p>Copy </p>
+      <textarea id="exportContent" readonly></textarea>
     </div>
     <div id="helpPage">
       <h1>openTPO Help</h1>
@@ -195,7 +206,7 @@ Each div refers to one certain page or frame. Use CSS or Javascript to show or h
 <!--reading section Float-->
     <div id="readingGlossary">
       <p id="readingGlossaryTitle">Glossary</p>
-      <p id="readingGlossaryContents"><strong>Shamans</strong>: blahblahblah very very very long long hahahaha blah</p>
+      <p id="readingGlossaryContents"></p>
       <a id="glossaryClose"></a>
     </div>
 <!--reading section end-->
@@ -213,14 +224,10 @@ Each div refers to one certain page or frame. Use CSS or Javascript to show or h
     <div id="notifyWrapper">
       <div id="notification">
 	<div id="notificationHeader">
-	  <p>Notice!</p><a id="notifyClose"></a>
 	</div>
 	<div id="notificationContent">
-	  <p>You will exit the test! It cannot It cannot It cannot It cannot It cannot It cannot It cannot It cannot It cannot It cannot It cannot It cannot It cannot It cannot It cannot It cannot It cannot It cannot It cannot </p>
-	  <p>weafoawjofgaier</p>
 	</div>
 	<div id="notifyButtonsWrapper">
-	  <a class="notifyButtons">OK</a><a class="notifyButtons">Cancel</a>
 	</div>
       </div>
     </div>

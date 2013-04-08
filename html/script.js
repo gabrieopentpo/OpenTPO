@@ -278,37 +278,25 @@ var notify = function(){
     }
 }();
 var storage = function(){
+    var savVer = '01';
     return {
 	reset : function(){
 	    var i, j, temp, tempj;
 	    this.save('init', 1);
 	    for (i = 1; i <= allSets; i++){
 		temp = i.toString();
-		this.save(temp + 't', 0);
 		for (j = 0; j <= 50; j++){
 		    var tempj = j.toString();
-		    this.save(temp + 'r-q' + tempj, 0);
-		    this.save(temp + 'l-q' + tempj, 0);
-		}
-		for (j = 0; j < 3; j++){
-		    var tempj = j.toString();
-		    this.save(temp + 'r' + tempj + 's', 0);
-		    this.save(temp + 'l' + tempj + 's', 0);
-		}
-		for (j = 0; j < 6; j++){
-		    var tempj = j.toString();
-		    this.save(temp + 's' + tempj + 's', 0);
+		    this.save(temp + 'rq' + tempj, 0);
+		    this.save(temp + 'lq' + tempj, 0);
 		}
 		this.save(temp + 'w1', '');
 		this.save(temp + 'w2', '');
 	    }
 	},
 	load : function(str){
-	    //2r-q3 : set02, reading, question03
-	    //2r1s : set02, reading, status01 - seen 1, notseen 0
-	    //2t : set02, tested 1, nottested 0
-	    //2l-q3/2l1s
-	    //2s1s : set02, speaking, status1 - seen 1, notseen 0
+	    //2rq3 : set02, reading, question03
+	    //2lq3
 	    //2w1/2w2
 	    //init
 	    var a = localStorage.getItem(str);
@@ -319,6 +307,77 @@ var storage = function(){
 	},
 	save : function(str, value){
 	    localStorage.setItem(str, value.toString());
+	},
+	clearReading : function(set){
+	    for (j = 0; j <= 50; j++){
+		var tempj = j.toString();
+		this.save(set.toString() + 'rq' + tempj, 0);
+	    }
+	},
+	clearListening : function(set){
+	    for (j = 0; j <= 50; j++){
+		var tempj = j.toString();
+		this.save(set.toString() + 'lq' + tempj, 0);
+	    }
+	},
+	clearWriting : function(set){
+	    this.clearWriting1();
+	    this.clearWriting2();
+	},
+	clearWriting1 : function(set){
+	    this.save(set.toString() + 'w1', '');
+	},
+	clearWriting2 : function(set){
+	    this.save(set.toString() + 'w2', '');
+	},
+	exportToContainer : function(con){
+	    __deleteAllChild(con);
+	    var str = 'Start';
+	    var i, j;
+	    var tmpvalue;
+	    str += allSets.toString();
+	    str += savVer;//save version
+	    str += this.load('init');
+	    for (i = 1; i <= allSets; i++){
+		temp = i.toString();
+		for (j = 0; j <= 50; j++){
+		    var tempj = j.toString();
+		    tmpvalue = this.load(temp + 'rq' + tempj);
+		    str += '_';
+		    str += tmpvalue;
+		    tmpvalue = this.load(temp + 'lq' + tempj);
+		    str += '_';
+		    str += tmpvalue;
+		}
+		tmpvalue = this.load(temp + 'w1');
+		str += '|_|';
+		str += tmpvalue;
+		str += '|_|';
+		str += tmpvalue;
+	    }
+	    str += 'End';
+	    __appendTextNode(con, str);
+	},
+	importFromString : function (str){//return status
+	    if (str.slice(0, 5) !== 'Start') return 'invalid';
+	    if (str.slice(-3) !== 'End') return 'invalid';
+	    //set check
+	    var temp = str.slice(5, 7);
+	    if (!(((/^[0-9]+$/.test(temp))) && (parseInt(temp, 10) > 0))){//invalid set num
+		return 'invalid';
+	    }
+	    var setnum = parseInt(temp, 10);
+	    if (setnum > allSets) return 'oldver';
+	    //version check
+	    temp = str.slice(7, 9);
+	    if (!(((/^[0-9]+$/.test(temp))) && (parseInt(temp, 10) > 0))){//invalid set num
+		return 'invalid';
+	    }
+	    if (temp !== savVer) return 'savVermismatch';
+	    //read contents
+	    var sstr = str.slice(9, -3);
+	    var iInit;
+	    var iReading = [];
 	}
     }
 }();
@@ -422,16 +481,6 @@ __id('aboutLink').onclick = function (){
     __show('aboutPage');
     __show('backButton');
 };
-__id('contributeLink').onclick = function (){
-    __hideAll();
-    __show('contributePage');
-    __show('backButton');
-};
-__id('acknowledgeLink').onclick = function (){
-    __hideAll();
-    __show('acknowledgePage');
-    __show('backButton');
-};
 __id('helpButton').onclick = function(){
     notify.show('green', 'Help', '<p>openTPO simulates the process and appearance of the actual test. If you are not sure about something, you are encouraged to try it out. In actual test, pressing <strong>Help</strong> button will show a help window.</p><p>Remember: the clock does NOT stop while you are reading instructions in Help in the actual test.</p>', [['OK', '']], false);
 };
@@ -445,9 +494,6 @@ __id('sectionExitButton').onclick = function (){
 	__hideAll();
 	showReviewChart();
     }
-};
-__id('resetStorage').onclick = function(){
-    notify.show('red', 'DANGEROUS', '<p>This operation will reset your local storage. All of your answers will be lost. Are you sure?</p>', [['Commit', 'storage.reset();'], ['Cancel', '']], true);
 };
 __id('glossaryClose').onclick = function(){
     __hide('readingGlossary');
@@ -661,7 +707,7 @@ function readingHub(status){
     }
     function updateQuestion(qnum){
 	var i;
-	var origans = parseInt(storage.load(testSet.toString() + 'r-q' + qnum), 10);
+	var origans = parseInt(storage.load(testSet.toString() + 'rq' + qnum), 10);
 	__deleteId('insStyle'); //delete the tracks of InsertQuestion
 	//and generate and show question number in the header
 	__deleteAllChild(__id('questionNumber'));
@@ -944,25 +990,25 @@ function ovalClickR(index, qnum){
 	    __id('choice' + i.toString()).className = 'ovalNotSelected';
 	}
 	__id('choice' + index.toString()).className = 'ovalSelected';
-	storage.save(testSet.toString() + 'r-q' + qnum, 1 << index);
+	storage.save(testSet.toString() + 'rq' + qnum, 1 << index);
     }
     else{//cancel it
 	__id('choice' + index.toString()).className = 'ovalNotSelected';
-	storage.save(testSet.toString() + 'r-q' + qnum, 0);
+	storage.save(testSet.toString() + 'rq' + qnum, 0);
     }
 }
 function squareClickR(index, qnum){
     if (tpoMode === 2) return;
-    var qstr = testSet.toString() + 'r-q' + qnum;
+    var qstr = testSet.toString() + 'rq' + qnum;
     var origans = parseInt(storage.load(qstr), 10);
     if (__id('choice' + index.toString()).className === 'squareNotSelected'){ //choose it
 	__id('choice' + index.toString()).className = 'squareSelected';
-	storage.save(testSet.toString() + 'r-q' + qnum, origans + (1 << index));
+	storage.save(testSet.toString() + 'rq' + qnum, origans + (1 << index));
     }
     else{//cancel it
 	__id('choice' + index.toString()).className = 'squareNotSelected';
 	readingUpdateAnswer(questionNow, index, 'cancel');
-	storage.save(testSet.toString() + 'r-q' + qnum, origans - (1 << index));
+	storage.save(testSet.toString() + 'rq' + qnum, origans - (1 << index));
     }
 }
 function insUpdate(index, qnum){
@@ -980,14 +1026,14 @@ function insUpdate(index, qnum){
 }
 function insClick(index, qnum){//0~~3 // only reading
     if (tpoMode === 2) return;
-    var qstr = testSet.toString() + 'r-q' + qnum;
+    var qstr = testSet.toString() + 'rq' + qnum;
     insUpdate(index, qnum);
     storage.save(qstr, 1 << index);
 }
 var sumSix = function(){
     //answer of sumSix is like '425', which indicates the choice that three answer frames are filled in
     var getOrigAns = function(qnum){
-	var qstr = testSet.toString() + 'r-q' + qnum;
+	var qstr = testSet.toString() + 'rq' + qnum;
 	var origans = storage.load(qstr);
 	while (origans.length < 3){
 	    origans = '0' + origans;
@@ -995,7 +1041,7 @@ var sumSix = function(){
 	return origans;
     }
     var saveOrigAns = function(qnum, ans){
-	var qstr = testSet.toString() + 'r-q' + qnum;
+	var qstr = testSet.toString() + 'rq' + qnum;
 	storage.save(qstr, ans);
     }
     return {
@@ -1136,7 +1182,7 @@ function generateReviewReadingChart(rArg){
 	case 2:
 	case 4:
 	    myans = '';
-	    temp = storage.load(testSet.toString() + 'r-q' + i);
+	    temp = storage.load(testSet.toString() + 'rq' + i);
 	    for (j = 0; j < 4; j++){
 		if ((temp & (1 << j)) !== 0){
 		    myans += (j + 1).toString();
@@ -1180,5 +1226,68 @@ function generateReviewReadingChart(rArg){
 		}
 	    }
 	}(i);
+    }
+}
+
+
+/************Settings page***************/
+__id('resetStorage').onclick = function(){
+    notify.show('red', 'DANGEROUS OPERATION', '<p>This operation will reset your local storage. All of your answers will be lost. Are you sure?</p>', [['Commit', 'storage.reset();'], ['Cancel', '']], true);
+};
+__id('resetReading').onclick = function(){
+    var a = __id('resetInput').value;
+    if (isValidSetNumStr(a) === false){
+	notify.show('yellow', 'Value invalid', 'Input must be an integer between 1 and ' + allSets.toString() + '.', [['Retry', 'a = "";']], false);
+    }else{
+	notify.show('red', 'Dangerous operation', '<p>This operation will clear all saved answers of reading set ' + a + '. Are you sure?</p>', [['Commit', 'storage.clearReading(' + a + ');'], ['Cancel', '']], true);
+    }
+}
+__id('resetListening').onclick = function(){
+    var a = __id('resetInput').value;
+    if (isValidSetNumStr(a) === false){
+	notify.show('yellow', 'Value invalid', 'Input must be an integer between 1 and ' + allSets.toString() + '.', [['Retry', 'a = "";']], false);
+    }else{
+	notify.show('red', 'Dangerous operation', '<p>This operation will clear all saved answers of listening set ' + a + '. Are you sure?</p>', [['Commit', 'storage.clearListening(' + a + ');'], ['Cancel', '']], true);
+    }
+}
+__id('resetWriting1').onclick = function(){
+    var a = __id('resetInput').value;
+    if (isValidSetNumStr(a) === false){
+	notify.show('yellow', 'Value invalid', 'Input must be an integer between 1 and ' + allSets.toString() + '.', [['Retry', 'a = "";']], false);
+    }else{
+	notify.show('red', 'Dangerous operation', '<p>This operation will clear saved response of integrated writing of set ' + a + '. Are you sure?</p>', [['Commit', 'storage.clearWriting1(' + a + ');'], ['Cancel', '']], true);
+    }
+}
+__id('resetWriting2').onclick = function(){
+    var a = __id('resetInput').value;
+    if (isValidSetNumStr(a) === false){
+	notify.show('yellow', 'Value invalid', 'Input must be an integer between 1 and ' + allSets.toString() + '.', [['Retry', 'a = "";']], false);
+    }else{
+	notify.show('red', 'Dangerous operation', '<p>This operation will clear saved response of independent writing of set ' + a + '. Are you sure?</p>', [['Commit', 'storage.clearWriting2(' + a + ');'], ['Cancel', '']], true);
+    }
+}
+var isValidSetNumStr = function(a){
+    return (a !== '') && ((/^[0-9]+$/.test(a))) && (parseInt(a, 10) > 0) && (parseInt(a, 10) <= allSets);
+}
+__id('importStorage').onclick = function(){
+    //notify.show('yellow', 'Import answers', 'Importing answers would rewrite ALL saved answers. Are you sure?', [['Commit', ''],['Cancel', '']], false);
+    __hideAll();
+    __show('importStoragePage');
+    __show('returnButton');
+    __id('returnButton').onclick = function(){
+	__hideAll();
+	__show('settingsPage');
+	__show('backButton');
+    }
+}
+__id('exportStorage').onclick = function(){
+    __hideAll();
+    __show('exportStoragePage');
+    storage.exportToContainer(__id('exportContent'));
+    __show('returnButton');
+    __id('returnButton').onclick = function(){
+	__hideAll();
+	__show('settingsPage');
+	__show('backButton');
     }
 }
