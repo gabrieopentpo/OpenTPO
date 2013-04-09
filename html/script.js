@@ -1,3 +1,8 @@
+/************************************
+This is script for openTPO_0.2.1.0.
+All lefts reserved.
+*************************************/
+
 //include functions
 function __deleteNode(node){
     if (node != null){
@@ -343,16 +348,16 @@ var storage = function(){
 		for (j = 0; j <= 50; j++){
 		    var tempj = j.toString();
 		    tmpvalue = this.load(temp + 'rq' + tempj);
-		    str += '_';
+		    //str += '_';
 		    str += tmpvalue;
 		    tmpvalue = this.load(temp + 'lq' + tempj);
-		    str += '_';
+		    //str += '_';
 		    str += tmpvalue;
 		}
 		tmpvalue = this.load(temp + 'w1');
-		str += '|_|';
+		//str += '|_|';
 		str += tmpvalue;
-		str += '|_|';
+		//str += '|_|';
 		str += tmpvalue;
 	    }
 	    str += 'End';
@@ -505,8 +510,9 @@ __id('showTimeButton').onclick = function(){
 __id('hideTimeButton').onclick = function(){
     generalTimer.hide();
 };
-
-resetSystem();
+window.onload = function(){
+    resetSystem();
+}
 
 //first-start instructions & clean storage
 if (storage.load('init') === '0'){
@@ -768,7 +774,7 @@ function readingHub(status){
 
 	    for (i = 0; i <= 3; i++){
 		var liNode = __appendNode(choiceList, 'li');
-		__appendNode(liNode, 'span');
+		__appendNode(liNode, 'div');
 		var aNode = __appendNode(liNode, 'a');
 		aNode.href = 'javascript:';
 		liNode.onclick = function(choiceClass, i, qnum){
@@ -1291,3 +1297,8 @@ __id('exportStorage').onclick = function(){
 	__show('backButton');
     }
 }
+__id('exportSelectAll').onclick = function(){
+    __id('exportContent').select();
+}
+
+

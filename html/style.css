@@ -1,5 +1,5 @@
 /************************************
-This is stylesheet for opentpo-0.2.0.0.
+This is stylesheet for openTPO_0.2.1.0.
 All lefts reserved.
 *************************************/
 
@@ -241,7 +241,7 @@ h2{
     font-family: Arial, sans-serif;
     font-size: 16px;
 }
-.ovalSelected span{
+.ovalSelected div{
     position: absolute;
     left: 0;
     top: 1px;
@@ -249,7 +249,7 @@ h2{
     height: 15px;
     background: url("images/meta.png") no-repeat -1008px -13px;
 }
-.ovalNotSelected span{
+.ovalNotSelected div{
     position: absolute;
     left: 0;
     top: 1px;
@@ -261,7 +261,7 @@ h2{
     padding: 0 0 10px 32px;
     position: relative;
 }
-.squareSelected span{
+.squareSelected div{
     position: absolute;
     left: 2px;
     top: 1px;
@@ -269,7 +269,7 @@ h2{
     height: 15px;
     background: url("images/meta.png") no-repeat -900px -16px;
 }
-.squareNotSelected span{
+.squareNotSelected div{
     position: absolute;
     left: 2px;
     top: 1px;
@@ -344,7 +344,7 @@ The following are settings of buttons.
 **************************************/
 /*Round buttons at the right side. Size: 59*39 */
 .circleButtonsRight, .circleButtonsRightGrey{
-    display: block;
+    display: none;
     float: right;
     width: 59px;
     height: 39px;
@@ -355,7 +355,7 @@ The following are settings of buttons.
 }
 /*Square buttons at the right side. Size: 74*34. Let's set the height the same as round buttons, simply for convenience. */
 .squareButtonsRight, .specialSquareButtonsRight{
-    display: block;
+    display: none;
     float: right;
     width: 74px;
     height: 34px;
@@ -371,7 +371,7 @@ The following are settings of buttons.
 
 /*Only square buttons at the left side. Size: 84*34 */
 .buttonsLeft{
-    display: block;
+    display: none;
     float: left;
     width: 84px;
     height: 34px;
@@ -512,7 +512,7 @@ The following are settings of buttons.
     background: url("images/meta.png") no-repeat -924px -32px;
 }
 #showTimeButton, #hideTimeButton{
-    display: block;
+    display: none;
     float: right;
     position: absolute;
     width: 84px;
@@ -809,10 +809,10 @@ Init code
 #readingQFrame > div{
     display:none;
     padding: 20px 30px;
-}
+}/*
 #header > a{
     display:none;
-}
+}*/
 #reviewChart{
     position: absolute;
     overflow: hidden;
@@ -952,4 +952,34 @@ input{
     -ms-user-select: auto;
     -khtml-user-select: auto;
     user-select: auto;
+}
+/****************
+h1 h2 on welcome page
+*****************/
+.contentPage{
+    padding: 0 4em !important;
+}
+.contentPage h1{
+    font-size: 175%;
+    margin: 1em auto;
+}
+.contentPage h2{
+    font-size: 125%;
+    margin: 1em auto;
+}
+.contentPage h3{
+    font-size: 110%;
+    margin: 0.4em auto;
+    font-weight: normal;
+}
+.contentPage li{
+    margin-bottom: 1em;
+}
+.contentPage p{
+    padding-left: 2em;
+    line-height: 120%;
+    margin-bottom: 1em;
+}
+.contentPage section{
+    margin-bottom: 3em;
 }

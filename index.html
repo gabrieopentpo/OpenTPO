@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <!-- 
-This is opentpo-0.2.0.0 at alpha stage.
+This is openTPO_0.2.1.0 at alpha stage.
 All lefts reserved.
 -->
 <html>
 <head>
-  <title>opentpo-0.2.0.0 alpha</title>
+  <title>openTPO_0.2.1.0 alpha</title>
   <link rel="stylesheet" type="text/css" href="html/style.css" />
 </head>
 <body  onselectstart="return false">
@@ -13,33 +13,33 @@ All lefts reserved.
 </div>
 <div id="pagewrapper">
   <div id="header">
-    <p id="pageTag">opentpo-0.2.0.0 alpha</p>
+    <p id="pageTag">openTPO_0.2.1.0 alpha</p>
     <p id="questionNumber"></p>
     <p id="timer"><span id="hours"></span> : <span id="minutes"></span> : <span id="seconds"></span></p>
-    <a id="showTimeButton"></a>
-    <a id="hideTimeButton"></a>
-    <a class="squareButtonsRight" id="gotoQuestionButton"></a>
-    <a class="circleButtonsRight" id="nextButton"></a>
-    <a class="circleButtonsRightGrey" id="nextButtonGrey"></a>
-    <a class="circleButtonsRight" id="backButton"></a>
-    <a class="circleButtonsRightGrey" id="backButtonGrey"></a>
-    <a class="circleButtonsRight" id="helpButton"></a>
-    <a class="circleButtonsRight" id="reviewButton"></a>
-    <a class="circleButtonsRightGrey" id="reviewButtonGrey"></a>
-    <a class="specialSquareButtonsRight" id="viewTextButton"></a>
-    <a class="specialSquareButtonsRight" id="viewQuestionButton"></a>
+    <div id="showTimeButton"></div>
+    <div id="hideTimeButton"></div>
+    <div class="squareButtonsRight" id="gotoQuestionButton"></div>
+    <div class="circleButtonsRight" id="nextButton"></div>
+    <div class="circleButtonsRightGrey" id="nextButtonGrey"></div>
+    <div class="circleButtonsRight" id="backButton"></div>
+    <div class="circleButtonsRightGrey" id="backButtonGrey"></div>
+    <div class="circleButtonsRight" id="helpButton"></div>
+    <div class="circleButtonsRight" id="reviewButton"></div>
+    <div class="circleButtonsRightGrey" id="reviewButtonGrey"></div>
+    <div class="specialSquareButtonsRight" id="viewTextButton"></div>
+    <div class="specialSquareButtonsRight" id="viewQuestionButton"></div>
 <!-- VOLUME button at the right side of CONTINUE button, but at the left side of OK button. -->
-    <a class="circleButtonsRight" id="volumeButton"></a>
-    <a class="circleButtonsRight" id="continueCircleButton"></a>
-    <a class="squareButtonsRight" id="continueButton"></a>
-    <a class="squareButtonsRight" id="reviewSquareButton"></a>
-    <a class="squareButtonsRight" id="returnButton"></a>
-    <a class="buttonsLeft" id="testExitButton"></a>
-    <a class="buttonsLeft" id="sectionExitButton"></a>
-    <a class="buttonsLeft" id="pauseTestButton"></a>
-    <a class="buttonsLeft" id="resumeTestButton"></a>
-    <a class="buttonsLeft" id="showSolutionButton"></a>
-    <a class="buttonsLeft" id="hideSolutionButton"></a>
+    <div class="circleButtonsRight" id="volumeButton"></div>
+    <div class="circleButtonsRight" id="continueCircleButton"></div>
+    <div class="squareButtonsRight" id="continueButton"></div>
+    <div class="squareButtonsRight" id="reviewSquareButton"></div>
+    <div class="squareButtonsRight" id="returnButton"></div>
+    <div class="buttonsLeft" id="testExitButton"></div>
+    <div class="buttonsLeft" id="sectionExitButton"></div>
+    <div class="buttonsLeft" id="pauseTestButton"></div>
+    <div class="buttonsLeft" id="resumeTestButton"></div>
+    <div class="buttonsLeft" id="showSolutionButton"></div>
+    <div class="buttonsLeft" id="hideSolutionButton"></div>
   </div>
   <div class="wrapper">
 <!--
@@ -67,48 +67,72 @@ Each div refers to one certain page or frame. Use CSS or Javascript to show or h
       <textarea id="importContent"></textarea>
     </div>
     <div id="exportStoragePage">
-      <p>Copy </p>
+      <p>Instruction: copy all contents below to a textfile.<button id="exportSelectAll">Select All</button></p>
       <textarea id="exportContent" readonly></textarea>
     </div>
-    <div id="helpPage">
-      <h1>openTPO Help</h1>
-      <p>Width of the test frame is locked at 1024 pixels. A minimum screen resolution of 1024x768 would ensure openTPO works correctly. Besides, we strongly recommend activating fullscreen mode by pressing <strong>F11</strong> on your keyboard. Running openTPO in fullscreen mode would help to simulate the appearance of actual test. </p>
-      <h2>Modes</h2>
-      <p>There are three modes: test mode, practice mode, and review mode.</p>
-      <p>Test mode would simulate the actual process of the test, including all four parts in order: reading section, listening section, speaking section, and writing section. There would be a compulsory ten-minute break after listening section, like the actual test. Answers and responses will be saved automatically.</p>
-      <p>Practice mode splits an entire set of test into several parts. Apart from four sections mentioned above in the test mode, an individual reading passage or a specific task of speaking or writing could be selected as well. When the selected part finishes, a pop-up guide would guide returning to the "set select" page. New answers of the selected part will be saved.</p>
-      <p>Review mode compares your answer and correct answer of reading section and listening section in a chart, from which you can reach every question and see solutions. For the speaking and writing section, since there are no correct answer, the chart would contain only your responses.</p>
-      <p>In this version of openTPO, only reading section is available.</p>
-      <h2>Answers</h2>
-      <p>This app could save answers automatically when a choice is selected. Since the webpage is unable to access a local file directly, openTPO puts practice history and responses in a sandbox managed by your browser. You SHOULD export these auto-save data to a file before cleaning browser history or uninstalling your browser. The reverse operation is to import auto-save data.</p>
-      <p>In this version of openTPO, importing and exporting are not supported. Clicking on Review mode button will show your answer and correct answer.</p>
-      <h2>Browser compatibility</h2>
-      <p>Since openTPO harnesses a set of HTML5 traits, you should ensure that your browser supports them. The newest browsers barely cause any problems. If you have any problems running openTPO, updating browser should always be the first choice.</p>
-      <p>The highest version of IE on Windows XP do NOT support any HTML5 traits. Windows XP users should download other browsers.</p>
-      <p>Be sure to enable Javascript support in browser settings. Nearly all functions of openTPO are powered by Javascript.</p>
+    <div id="helpPage" class="contentPage">
+      <h1>Help</h1>
+      <section>
+	<h2>First suggestion</h2>
+	<p>Width of the test frame is locked at 1024 pixels. A minimum screen resolution of 1024x768 would ensure openTPO works correctly. Besides, we strongly recommend activating fullscreen mode by pressing <strong>F11</strong> on your keyboard. Running openTPO in fullscreen mode would help to simulate the appearance of actual test.</p>
+	<p>If your screen is much wider than 1024 pixels, two side stripes would look ugly and text and buttons keep a relatively small size. In most web browser, <strong>Ctrl + MouseScrollUp</strong> would help you with this problem.</p>
+      </section>
+      <section>
+	<h2>Modes</h2>
+	<p>There are three modes: test mode, practice mode, and review mode.</p>
+	<p>Test mode would simulate the actual process of the test, including all four parts in order: reading section, listening section, speaking section, and writing section. There would be a compulsory ten-minute break after listening section, like the actual test. Answers and responses will be saved automatically.</p>
+	<p>Practice mode splits an entire set of test into several parts. Apart from four sections mentioned above in the test mode, an individual task of speaking or writing could be selected as well. Answers of the selected part will be saved.</p>
+	<p>Review mode compares your answer and correct answer of reading section and listening section in a chart, from which you can reach every question and see solutions. For the speaking and writing section, since there are no correct answer, the chart show your own responses.</p>
+	<p>In this version of openTPO, only reading section is available.</p>
+      </section>
+      <section>
+	<h2>Answers</h2>
+	<p>This app could save answers automatically when a choice is selected. Since the webpage is unable to access a local file directly, openTPO puts practice history and responses in a sandbox managed by your browser. You SHOULD export these auto-save data to a file before cleaning browser history or uninstalling your browser. The reverse operation is to import auto-save data.</p>
+	<p>In this version of openTPO, importing and exporting are not supported. Clicking on Review mode button will show your answer and correct answer.</p>
+      </section>
+      <section>
+	<h2>Browser compatibility</h2>
+	<p>Since openTPO harnesses a set of HTML5 traits, you should ensure that your browser supports them. The newest browsers barely cause any problems. If you have any problems running openTPO, updating browser should always be the first choice.</p>
+	<p>The highest version of IE on Windows XP do NOT support any HTML5 traits. Windows XP users should download other browsers.</p>
+	<p>Be sure to enable Javascript support in browser settings. Nearly all functions of openTPO are powered by Javascript.</p>
+      </section>
     </div>
-    <div id="aboutPage">
-      <p>openTPO-0.1.0.0_alpha</p>
-    </div>
-    <div id="acknowledgementPage">
-      
-    </div>
-    <div id="contributePage">
-      <h1>Contribute to this project!</h1>
-      <p>Born to be open-source, openTPO welcomes every contributor. At present it is in an alpha stage which includes only a little fraction of what it should have. With your help, we believe openTPO will grow much faster.</p>
-      <h2>Report bugs</h2>
-      <p>Although constantly tested during its development, openTPO cannot guarantee it is bug-free. We would appreciate everyone who finds a bug, no matter how little it is.</p>
-      <p>Emailing the development team is the easiest way to report a bug. The email address is at the bottom of this page.</p>
-      <h2>Help with contents</h2>
-      <p>Fitting a reading passage into the format that openTPO could recognize is proved time-consuming and tedious. There are at present 26 reading sets, each including 3 passages. We wish you be the volunteer - helping with any individual passage would be much appreciated.</p>
-      <p>The development team has invited a markup language specifically for the reading passage. To help process a passage becomes fairly easy. It would not take much time and effort to deal with an individual passage, as long as you have the text of passage and questions. For more details, please view our instructions in the <strong>markup</strong> folder.</p>
-      <p>Before starting with a passage, please be sure to email us to let us know which passage you will deal with. If another volunteer has finished the one that you choose, we could inform you.</p>
-      <h2>Make a patch</h2>
-      <p>Since the source codes are entirely open to public, certainly we would appreciate a lot if you submit a patch to this version of openTPO!</p>
-      <p>Both emailing us with the patch and forking and merging with our project on github.com are great ways to help directly with the codes. We are looking forward to every patch!</p>
-      <h1>Contact the team</h1>
-      <p>Our email address: <a href="mailto: opentpo@outlook.com">opentpo@outlook.com</a></p>
-      <p>Our project on github: <a href="https://github.com/opentpo/opentpo">https://github.com/opentpo/opentpo</a></p>
+    <div id="aboutPage" class="contentPage">
+      <h1>openTPO_0.2.1.0 at alpha stage</h1>
+      <section>
+	<h2>What is it?</h2>
+	<p>openTPO is a simulator for test of Engligh for foreign languages, a useful tool for test-takers to prepare for the test.</p>
+	<p>Test-takers can become more familiar with the test procedure and the fashion of questions. Contents of openTPO come from TPO which is from the actual tests. By practising with openTPO, you can find your own pace of test, and try different strategy to solve the questions and have a better performance in the actual test.</p>
+      </section>
+      <section>
+	<h2>Advantages</h2>
+	<ul>
+	  <li>
+	    <h3>Free of charge</h3>
+	    <p>Built on a webpage, openTPO is completely open-source and thus definitely free. (Now that you have the source code written by us developers, how could we charge you?) You do NOT have to pay some money to buy a similar TPO simulator on Taobao. You do NOT need any "crackers" anymore.</p>
+	  </li>
+	  <li>
+	    <h3>Light-weighted and portable</h3>
+	    <p>As long as your computer has the latest browser (e.g. IE10, Chrome, Firefox, etc.), openTPO can run with full functionality, needless to install a huge Java runtime library which would slow down your computer.</p>
+	    <p>openTPO itself is merely a webpage, which means you can run it everywhere: Windows, Mac, Linux, and even iPad. :)</p>
+	  </li>
+	  <li>
+	    <h3>Keeping bug-free</h3>
+	    <p>If you find error in contents or bugs of openTPO itself, report to us! We will soon solve the problem and add your name to the contributor list. If you are aware of how webpage works, forking openTPO repository on github.com and pulling requests or just submitting issues are both much acknowledged! How do you report a problem if using a "cracked" software?</p>
+	  </li>
+	</ul>
+      </section>
+      <section>
+	<h2>Contributors</h2>
+	<ul>
+	  <li><p>z.Runmin: first tester.</p></li>
+	  <li><p>Mr. lambda: fixed a few typos.</p></li>
+	</ul>
+      </section>
+      <section>
+	<h2>Contact</h2>
+	<p>Project email: <a href="mailto: opentpo@outlook.com">opentpo@outlook.com</a></p>
+      </section>
     </div>
 <!--Mode selection-->
     <div id="setSelectPage">
