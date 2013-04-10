@@ -7,17 +7,17 @@ Content Version: N/A
 
 ## It is...
 
-*Free of charge
+* Free of charge
 
     Built on a webpage, OpenTPO is completely open-source and thus definitely free. (Now that you have the source code written by us developers, how could we charge you?) You do NOT have to pay some money to buy a similar TPO simulator on Taobao. You do NOT need any "crackers" anymore.
 
-*Light-weighted and portable
+* Light-weighted and portable
 
     As long as your computer has the latest browser (e.g. IE10, Chrome, Firefox, etc.), OpenTPO can run with full functionality, needless to install a huge Java runtime library which would slow down your computer.
 
     OpenTPO itself is merely a webpage, which means you can run it everywhere: Windows, Mac, Linux, and even iPad. :)
 
-*Keeping bug-free
+* Keeping bug-free
 
     If you find error in contents or bugs of OpenTPO itself, report to us! We will soon solve the problem and add your name to the contributor list. If you are aware of how webpage works, forking OpenTPO repository on github.com and pulling requests or just submitting issues are both much acknowledged! How do you report a problem if using a "cracked" software?
 
