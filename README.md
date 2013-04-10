@@ -1,35 +1,41 @@
-# opentpo
+# OpenTPO
 
-A TPO simulation tool made by HTML & JavaScript
+OpenTPO is a simulator for test of Engligh for foreign languages, a useful tool for test-takers to prepare for the test.
 
-Version: 0.1.0.0_alpha
+Core Version: 0.2.1
+Content Version: N/A
+
+## It is...
+
+*Free of charge
+
+    Built on a webpage, OpenTPO is completely open-source and thus definitely free. (Now that you have the source code written by us developers, how could we charge you?) You do NOT have to pay some money to buy a similar TPO simulator on Taobao. You do NOT need any "crackers" anymore.
+
+*Light-weighted and portable
+
+    As long as your computer has the latest browser (e.g. IE10, Chrome, Firefox, etc.), OpenTPO can run with full functionality, needless to install a huge Java runtime library which would slow down your computer.
+
+    OpenTPO itself is merely a webpage, which means you can run it everywhere: Windows, Mac, Linux, and even iPad. :)
+
+*Keeping bug-free
+
+    If you find error in contents or bugs of OpenTPO itself, report to us! We will soon solve the problem and add your name to the contributor list. If you are aware of how webpage works, forking OpenTPO repository on github.com and pulling requests or just submitting issues are both much acknowledged! How do you report a problem if using a "cracked" software?
+
+## Contribute
+
+* Report bugs
+
+    Although constantly tested during development, we cannot guarantee OpenTPO is bug-free. We appreciate everyone who finds a bug. We believe that every bug is precious, no matter how little it is.
+
+* Help with contents
+
+    The development team has invited a marker language specifically for the reading passage to make it fairly easy. It would not take much time and effort to deal with an individual passage, as long as you have the text of passage and questions. Instructions of the marker language are written in wiki in the repository page on github.com
+
+    Before starting with a passage, please be sure to email us and let us know which passage you choose to deal with. If someone has started with the one that you have chosen, we could inform you in time.
 
 
-## openTPO Help
+* Fork our project
 
-Width of the test frame is locked at 1024 pixels. A minimum screen resolution of 1024x768 would ensure openTPO works correctly. Besides, we strongly recommend activating fullscreen mode by pressing F11 on your keyboard. Running openTPO in fullscreen mode would help to simulate the appearance of actual test.
-Modes
+    Since the source codes are entirely open to public, certainly we appreciate a lot if you submit a patch to the latest version of OpenTPO.
 
-There are three modes: test mode, practice mode, and review mode.
-
-Test mode would simulate the actual process of the test, including all four parts in order: reading section, listening section, speaking section, and writing section. There would be a compulsory ten-minute break after listening section, like the actual test. Answers and responses will be saved automatically.
-
-Practice mode splits an entire set of test into several parts. Apart from four sections mentioned above in the test mode, an individual reading passage or a specific task of speaking or writing could be selected as well. When the selected part finishes, a pop-up guide would guide returning to the "set select" page. New answers of the selected part will be saved.
-
-Review mode compares your answer and correct answer of reading section and listening section in a chart, from which you can reach every question and see solutions. For the speaking and writing section, since there are no correct answer, the chart would contain only your responses.
-
-In this version of openTPO, only reading section is available.
-
-## Answers
-
-This app could save answers automatically when a choice is selected. Since the webpage is unable to access a local file directly, openTPO puts practice history and responses in a sandbox managed by your browser. You SHOULD export these auto-save data to a file before cleaning browser history or uninstalling your browser. The reverse operation is to import auto-save data.
-
-In this version of openTPO, importing and exporting are not supported. Clicking on Review mode button will show your answer and correct answer.
-
-## Browser compatibility
-
-Since openTPO harnesses a set of HTML5 traits, you should ensure that your browser supports them. The newest browsers barely cause any problems. If you have any problems running openTPO, updating browser should always be the first choice.
-
-The highest version of IE on Windows XP do NOT support any HTML5 traits. Windows XP users should download other browsers.
-
-Be sure to enable Javascript support in browser settings. Nearly all functions of openTPO are powered by Javascript.
+    Forking our project on github.com is a great way to help directly with the codes. We are looking forward to every forker!
