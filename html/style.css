@@ -922,6 +922,63 @@ review chart
     background: #9f9;
 }
 
+/***************
+reading review table
+****************/
+#readingReview{
+    padding: 0.5em 1.5em;
+    overflow: auto;
+}
+#readingReview p{
+    margin-bottom: 0.5em;
+}
+#readingReviewTable .correct{
+    background: #9f9;
+}
+#readingReviewTable .incorrect{
+    background: #f99;
+}
+#readingReviewTable{
+    width: 95%;
+    margin: 0 auto;
+}
+#readingReviewTable table{
+    display: block;
+    font-family: Verdana, Arial, sans-serif;
+    border: 1px solid #8e8877;
+    border-collapse: collapse;
+    width: 100%;
+}
+#readingReviewTable tr{
+    height: 1.5em;
+    background: #f1e7ca;
+}
+#readingReviewTable td, th{
+    border: 1px solid #8e8877;
+}
+#readingReviewTable td{
+    text-align: center;
+}
+#readingReviewTable td.tableLeftAligned{
+    text-align: left;
+}
+#readingReviewTable th{
+    text-align: center;
+    background: #b98b6f;
+}
+#readingReviewTable #readingReviewTableSelected{
+    background: #e6c4b5;
+}
+#readingReviewTable > table > tr > th:first-of-type{
+    width: 20%;
+}
+#readingReviewTable > table > tr > th:nth-of-type(2){
+    width: 50%;
+}
+#readingReviewTable > table > tr > th:nth-of-type(3){
+    width: 30%;
+}
+
 
 /**********
 settings page

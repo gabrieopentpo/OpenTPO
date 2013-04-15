@@ -139,6 +139,21 @@ var _reading = function(){
 		q[qnum].markPara = [];
 	    }
 	    q[qnum].markPara.push(para);
+	},
+	getDescription : function(qnum){
+	    var desc;
+	    switch(q[qnum].type){
+	    case 6:
+		desc = 'Direction: ';
+		break;
+	    case 4:
+		desc = 'Insert';
+		break;
+	    default:
+		desc = q[qnum].heading.slice(0, 30);
+		break;
+	    }
+	    return desc;
 	}
     };
 }();
@@ -842,7 +857,109 @@ function readingHub(status){
 	__addStyleSheet(sheetName, newsheet);
     }
     
+    var showReadingReviewChart = function(){
+	__deleteAllChild(__id('readingReviewTable'));
+	var tableNode = __appendNode(__id('readingReviewTable'), 'table');
+	var trNode = __appendNode(tableNode, 'tr');
+	__appendTextNode(__appendNode(trNode, 'th'), 'Number');
+	__appendTextNode(__appendNode(trNode, 'th'), 'Description');
+	__appendTextNode(__appendNode(trNode, 'th'), 'Status');
+	var total = _reading.totalQ();
+	var i;
+	var temp;
+	for (i = 0; i < total; i++){
+	    trNode = __appendNode(tableNode, 'tr');
+	    if (i === selectedq){
+		trNode.id = 'readingReviewTableSelected';
+	    }
+	    __appendTextNode(__appendNode(trNode, 'td'), (i + 1).toString());
+	    __appendTextNode(temp = __appendNode(trNode, 'td'), _reading.getDescription(i));
+	    temp.className = 'tableLeftAligned';
+	    if (_reading.getMaxSeen() < i){
+		__appendTextNode(__appendNode(trNode, 'td'), 'Not seen');
+		trNode.onclick = voidFunction;
+	    }else{ //seen
+		origans = parseInt(storage.load(testSet.toString() + 'rq' + i), 10);
+		if (origans === 0){
+		    __appendTextNode(__appendNode(trNode, 'td'), 'Not answered');
+		}else{
+		    __appendTextNode(__appendNode(trNode, 'td'), 'Answered');
+		}
+		trNode.onclick = function(i){
+		    return function(){
+			if (__id('readingReviewTableSelected') !== null){
+			    __id('readingReviewTableSelected').id = '';
+			}
+			selectedq = i;
+			__id('readingReviewTable').getElementsByTagName('tr')[i + 1].id = 'readingReviewTableSelected';
+		    }
+		}(i);
+	    }
+	}
+    }
 
+    var showReadingReviewChartWithAnswers = function(){
+	__deleteAllChild(__id('readingReviewTable'));
+	var tableNode = __appendNode(__id('readingReviewTable'), 'table');
+	var trNode = __appendNode(tableNode, 'tr');
+	__appendTextNode(__appendNode(trNode, 'th'), 'Number');
+	__appendTextNode(__appendNode(trNode, 'th'), 'Description');
+	__appendTextNode(__appendNode(trNode, 'th'), 'Status');
+	var total = _reading.totalQ();
+	var i;
+	var theQ;
+	var coans;
+	var myans;
+	var temp;
+	for (i = 0; i < total; i++){
+	    trNode = __appendNode(tableNode, 'tr');
+	    __appendTextNode(__appendNode(trNode, 'td'), (i + 1).toString());
+	    __appendTextNode(__appendNode(trNode, 'td'), _reading.getDescription(i));
+	    theQ = _reading.getQ(i);
+	    coans = theQ.ansCorrect; //it's a string
+	    switch(theQ.type){
+	    case 1:
+	    case 2:
+	    case 4:
+		myans = '';
+		temp = storage.load(testSet.toString() + 'rq' + i);
+		for (j = 0; j < 4; j++){
+		    if ((temp & (1 << j)) !== 0){
+			myans += (j + 1).toString();
+		    }
+		}
+		break;
+	    case 6:
+		myans = '';
+		for (j = 1; j <= 6; j++){
+		    if (sumSix.check(j, i)){
+			myans += j.toString();
+		    }
+		}
+		break;
+	    default:
+		break;
+	    }
+	    if (myans === '') myans = 'none';
+
+	    if (myans === coans){
+		__appendTextNode(temp = __appendNode(trNode, 'td'), 'Correct');
+		trNode.className = 'correct';
+	    }else{
+		__appendTextNode(temp = __appendNode(trNode, 'td'), 'Incorrect');
+		trNode.className = 'incorrect';
+	    }
+	    trNode.onclick = function(i){
+		return function(){
+		    if (__id('readingReviewTableSelected') !== null){
+			__id('readingReviewTableSelected').id = '';
+		    }
+		    selectedq = i;
+		    __id('readingReviewTable').getElementsByTagName('tr')[i + 1].id = 'readingReviewTableSelected';
+		}
+	    }(i);
+	}
+    }
 
     //here starts the main part of function
     __hideAll();
@@ -897,13 +1014,19 @@ function readingHub(status){
 	return;
     }
     var reviewtest = /^review([0-9]+)$/;
+    var presentq;
+    var selectedq;
     if (reviewtest.test(status)){
 	__show('readingReview');
+	presentq = parseInt(reviewtest.exec(status)[1]);
+	selectedq = presentq;
+	if (tpoMode === 2){//review
+	    showReadingReviewChartWithAnswers();
+	}else{
+	    showReadingReviewChart();
+	}
 	__show('returnButton');
 	__show('gotoQuestionButton');
-	var presentq = parseInt(reviewtest.exec(status)[1]);
-	var selectedq = presentq;
-	var returnButtonClick;
 	__id('returnButton').onclick = function(){
 	    if (presentq < _reading.totalQ()){
 		readingHub(presentq);
